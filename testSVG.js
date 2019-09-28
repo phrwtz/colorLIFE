@@ -2,14 +2,63 @@ var board = [];
 var colorToSet;
 var runFlag = false;
 var step = 0;
-var size = 8;
+var size = 16;
+var cont = document.getElementById("container");
+var boardRect = document.getElementById("boardRect");
+var whiteRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+var redRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+var blueRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+var greenRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
 
+makeColorButtons();
 makeBoard();
 
+function makeColorButtons() {
+    whiteRect.setAttribute("id", "whiteRect");
+    whiteRect.setAttribute("width", "40");
+    whiteRect.setAttribute("height", "40");
+    whiteRect.setAttribute("x", "0px");
+    whiteRect.setAttribute("y", "0px");
+    whiteRect.setAttribute("stroke", "black");
+    whiteRect.setAttribute("stroke-width", "2");
+    whiteRect.setAttribute("fill", "white");
+    whiteRect.setAttribute("onclick", "setWhite()");
+    redRect.setAttribute("id", "redRect");
+    redRect.setAttribute("width", "40");
+    redRect.setAttribute("height", "40");
+    redRect.setAttribute("x", "50px");
+    redRect.setAttribute("y", "0");
+    redRect.setAttribute("stroke", "black");
+    redRect.setAttribute("stroke-width", "2");
+    redRect.setAttribute("fill", "pink");
+    redRect.setAttribute("onclick", "setRed()");
+    blueRect.setAttribute("id", "blueRect");
+    blueRect.setAttribute("width", "40");
+    blueRect.setAttribute("height", "40");
+    blueRect.setAttribute("x", "100");
+    blueRect.setAttribute("y", "0");
+    blueRect.setAttribute("stroke", "black");
+    blueRect.setAttribute("stroke-width", "2");
+    blueRect.setAttribute("fill", "lightblue");
+    blueRect.setAttribute("onclick", "setBlue()");
+    greenRect.setAttribute("id", "greenRect");
+    greenRect.setAttribute("width", "40");
+    greenRect.setAttribute("height", "40");
+    greenRect.setAttribute("x", "150");
+    greenRect.setAttribute("y", "0");
+    greenRect.setAttribute("stroke", "black");
+    greenRect.setAttribute("stroke-width", "2");
+    greenRect.setAttribute("fill", "lightgreen");
+    greenRect.setAttribute("onclick", "setGreen()");
+    cont.appendChild(whiteRect);
+    cont.appendChild(redRect);
+    cont.appendChild(blueRect);
+    cont.appendChild(whiteRect);
+    cont.appendChild(greenRect);
+}
+
 function makeBoard() {
-    var cont = document.getElementById("container"),
-        row = [];
-    var boardRect = document.getElementById("boardRect");
+    var row = [];
     for (var i = 0; i < size; i++) {
         var iStr = (100 + 40 * i).toString();
         board[i] = [];
@@ -47,20 +96,14 @@ function clearBoard() {
     console.log("Board cleared");
 }
 
-function countColors() {
-    var neighboringColorArray = [],
-        colorCounts = [];
-    for (x = 0; x < size; x++) {
-        for (y = 0; y < size; y++) {
-            neighboringColorArray = getNeighboringColors(board, x, y);
-            colorCounts = countNeighboringColors(neighboringColorArray);
-            set
-        }
-    }
-}
-
-function getNeighboringColors(x, y) {
-    var box = document.getElementById(board[x][y]);
+function countNeighboringColors(box) {
+    var id = box.getAttribute("id"),
+        x = parseInt(id.split("_")[0]),
+        y = parseInt(id.split("_")[1]),
+        colorCounts = new Object();
+    colorCounts.red = 0;
+    colorCounts.blue = 0;
+    colorCounts.green = 0;
     if (y > 0) {
         var upBox = document.getElementById(board[x][y - 1]);
         var upColor = upBox.getAttribute("fill");
@@ -77,35 +120,17 @@ function getNeighboringColors(x, y) {
         var rightBox = document.getElementById(board[x + 1][y]);
         var rightColor = rightBox.getAttribute("fill");
     }
-    return [upColor, leftColor, downColor, rightColor];
-}
-
-function countNeighboringColors(colors) {
-    colorCounts = Object;
-    colorCounts.red = 0;
-    colorCounts.blue = 0;
-    colorCounts.green = 0;
-    for (var i = 0; i < colors.length; i++) {
-        if (colors[i] == "red") {
-            colorCounts.red++;
-        } else if (colors[i] == "blue") {
-            colorCounts.blue++;
-        } else if (colors[i] == "green") {
-            colorCounts.green++;
-        }
-    }
+    colorCounts[upColor]++;
+    colorCounts[downColor]++;
+    colorCounts[rightColor]++;
+    colorCounts[leftColor]++;
     return colorCounts;
 }
 
-function runAutoColors(board) {
+function runAutoColors(box) {
     var color;
-    for (x = 0; x < size; x++) {
-        for (y = 0; y < size; y++) {
-            box = document.getElementById(board[x][y]);
-            color = runRule(board, x, y)
-            box.setAttribute("fill", color);
-        }
-    }
+    color = runRule(box)
+    box.setAttribute("fill", color);
 }
 
 function toggleRun() {
@@ -120,105 +145,102 @@ function toggleRun() {
     }
 }
 
-function runOnce() {
+function runOnce(box) {
     runFlag = false;
-    runRules();
+    runRules(box);
 }
 
-function runRules() {
+function runRules(box) {
     var newBoard = [];
+    var counts = Object;
     var color = "white";
+    var id = box.getAttribute("id"),
+        x = parseInt(id.split("_")[0]),
+        y = parseInt(id.split("_")[1]);
     step++;
-    for (x = 0; x < size; x++) {
-        newBoard[x] = [];
-        for (y = 0; y < size; y++) {
-            box = document.getElementById(board[x][y]);
-            colors = getNeighboringColors(x, y);
-            colorCounts = countNeighboringColors(colors);
-            thisColor = box.getAttribute("fill");
-            r = colorCounts.red;
-            b = colorCounts.blue;
-            g = colorCounts.green;
+    counts = countNeighboringColors(box);
+    thisColor = box.getAttribute("fill");
+    r = counts.red;
+    b = counts.blue;
+    g = counts.green;
 
-            // Situations where all four neighboring boxes are colored
-            if ((r == 4) && (b == 0) && (g == 0)) {
-                color = "red";
-            } else if ((b == 4) && (r == 0) && (g == 0)) {
-                color = "blue";
-            } else if ((g == 4) && (r == 0) && (b == 0)) {
-                color = "green";
+    // Situations where all four neighboring boxes are colored
+    if ((r == 4) && (b == 0) && (g == 0)) {
+        color = "red";
+    } else if ((b == 4) && (r == 0) && (g == 0)) {
+        color = "blue";
+    } else if ((g == 4) && (r == 0) && (b == 0)) {
+        color = "green";
 
-            } else if (((r == 3) && (b == 1)) || ((g == 3) && (b == 1))) {
-                color = "blue ";
-            } else if (((b == 3) && (r == 1)) || ((g == 3) && (r == 1))) {
-                color = "red";
-            } else if (((g == 1) && (b == 3)) || ((r == 3) && (g == 1))) {
-                color = "green";
+    } else if (((r == 3) && (b == 1)) || ((g == 3) && (b == 1))) {
+        color = "blue ";
+    } else if (((b == 3) && (r == 1)) || ((g == 3) && (r == 1))) {
+        color = "red";
+    } else if (((g == 1) && (b == 3)) || ((r == 3) && (g == 1))) {
+        color = "green";
 
-            } else if ((r == 2) && (b == 2) && (g == 0)) {
-                color = "green";
-            } else if ((r == 2) && (b == 0) && (g == 2)) {
-                color = "blue";
-            } else if ((r == 0) && (b == 2) && (g == 2)) {
-                color = "red";
+    } else if ((r == 2) && (b == 2) && (g == 0)) {
+        color = "green";
+    } else if ((r == 2) && (b == 0) && (g == 2)) {
+        color = "blue";
+    } else if ((r == 0) && (b == 2) && (g == 2)) {
+        color = "red";
 
-            } else if ((r == 2) && (b == 1) && (g == 1)) {
-                color = "red";
-            } else if ((r == 1) && (b == 2) && (g == 1)) {
-                color = "blue";
-            } else if ((r == 1) && (b == 1) && (g == 2)) {
-                color = "green";
-            }
-
-            // Situations where three of the four neighboring boxes are colored
-            else if ((r == 3) && (b == 0) && (g == 0)) {
-                color = "red";
-            } else if ((b == 3) && (r == 0) && (g == 0)) {
-                color = "blue";
-            } else if ((g == 3) && (r == 0) && (b == 0)) {
-                color = "green";
-
-            } else if (((r == 2) && (b == 1) && (g == 0)) || ((r == 0) && (b == 1) && (g == 2))) {
-                color = "blue";
-            } else if (((r == 1) && (b == 2) && (g == 0)) || ((r == 1) && (b == 0) && (g == 2))) {
-                color = "red";
-            } else if (((r == 0) && (b == 2) && (g == 1)) || ((r == 2) && (b == 0) && (g == 1))) {
-                color = "green";
-
-            } else if (((r == 1) && (b == 1) && (g == 1))) {
-                color = "white";
-            }
-
-            // Situations where two of the four neighboring boxes are colored
-            else if ((r == 2) && (b == 0) && (g == 0)) {
-                color = "red";
-            } else if ((b == 2) && (r == 0) && (g == 0)) {
-                color = "blue";
-            } else if ((g == 2) && (r == 0) && (b == 0)) {
-                color = "green";
-
-            } else if (r == 1 && b == 1 && g == 0) {
-                color = "green";
-            } else if (r == 0 && b == 1 && g == 1) {
-                color = "red";
-            } else if (r == 1 && b == 0 && g == 1) {
-                color = "blue";
-            }
-
-
-            // Situations where one of the four neighboring boxes is colored
-            else if ((r == 1) && (b == 0) && (g == 0)) {
-                color = "red";
-            } else if ((b == 1) && (r == 0) && (g == 0)) {
-                color = "blue";
-            } else if ((g == 1) && (b == 0) && (r == 0)) {
-                color = "green";
-            } else {
-                color = thisColor;
-            }
-            newBoard[x].push(color);
-        }
+    } else if ((r == 2) && (b == 1) && (g == 1)) {
+        color = "red";
+    } else if ((r == 1) && (b == 2) && (g == 1)) {
+        color = "blue";
+    } else if ((r == 1) && (b == 1) && (g == 2)) {
+        color = "green";
     }
+
+    // Situations where three of the four neighboring boxes are colored
+    else if ((r == 3) && (b == 0) && (g == 0)) {
+        color = "red";
+    } else if ((b == 3) && (r == 0) && (g == 0)) {
+        color = "blue";
+    } else if ((g == 3) && (r == 0) && (b == 0)) {
+        color = "green";
+
+    } else if (((r == 2) && (b == 1) && (g == 0)) || ((r == 0) && (b == 1) && (g == 2))) {
+        color = "blue";
+    } else if (((r == 1) && (b == 2) && (g == 0)) || ((r == 1) && (b == 0) && (g == 2))) {
+        color = "red";
+    } else if (((r == 0) && (b == 2) && (g == 1)) || ((r == 2) && (b == 0) && (g == 1))) {
+        color = "green";
+
+    } else if (((r == 1) && (b == 1) && (g == 1))) {
+        color = "white";
+    }
+
+    // Situations where two of the four neighboring boxes are colored
+    else if ((r == 2) && (b == 0) && (g == 0)) {
+        color = "red";
+    } else if ((b == 2) && (r == 0) && (g == 0)) {
+        color = "blue";
+    } else if ((g == 2) && (r == 0) && (b == 0)) {
+        color = "green";
+
+    } else if (r == 1 && b == 1 && g == 0) {
+        color = "green";
+    } else if (r == 0 && b == 1 && g == 1) {
+        color = "red";
+    } else if (r == 1 && b == 0 && g == 1) {
+        color = "blue";
+    }
+
+
+    // Situations where one of the four neighboring boxes is colored
+    else if ((r == 1) && (b == 0) && (g == 0)) {
+        color = thisColor;
+    } else if ((b == 1) && (r == 0) && (g == 0)) {
+        color = thisColor;
+    } else if ((g == 1) && (b == 0) && (r == 0)) {
+        color = thisColor;
+    } else {
+        color = thisColor;
+    }
+    newBoard[x].push(color);
     fillBoard(newBoard);
     if (runFlag) {
         step++;
@@ -256,29 +278,39 @@ function fillBoard(newBoard) {
     }
 }
 
-function setNone() {
+function setWhite() {
     colorToSet = "white";
-    console.log("Set color to " + colorToSet + " on click.");
+    redRect.setAttribute("fill", "pink");
+    blueRect.setAttribute("fill", "lightblue");
+    greenRect.setAttribute("fill", "lightgreen");
 }
 
 function setRed() {
     colorToSet = "red";
-    console.log("Set color to " + colorToSet + " on click.");
+    redRect.setAttribute("fill", "red");
+    blueRect.setAttribute("fill", "lightblue");
+    greenRect.setAttribute("fill", "lightgreen");
 }
 
 function setBlue() {
     colorToSet = "blue";
-    console.log("Set color to " + colorToSet + " on click.");
+    redRect.setAttribute("fill", "pink");
+    blueRect.setAttribute("fill", "blue");
+    greenRect.setAttribute("fill", "lightgreen");
 }
 
 function setGreen() {
     colorToSet = "green";
-    console.log("Set color to " + colorToSet + " on click.");
+    redRect.setAttribute("fill", "pink");
+    blueRect.setAttribute("fill", "lightblue");
+    greenRect.setAttribute("fill", "green");
 }
 
 function setColorOnClick(id) {
     if (colorToSet) {
         box = document.getElementById(id);
         box.setAttribute("fill", colorToSet);
+        //      runOnce(box);
+        findSquares(box);
     }
 }
