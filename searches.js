@@ -31,18 +31,21 @@ function cornersMatch(x, y, dxArray, dyArray) {
     return squares;
 }
 
-function fillSquare(square, color) {
+function fillSquare(square, cornerColor) {
     var x = square[0],
         y = square[1],
         dx = square[2],
         dy = square[3],
-        c = fillColor(color);
+        myBox,
+        insideColor;
     (dx > 0 ? sgnX = 1 : sgnX = -1);
     (dy > 0 ? sgnY = 1 : sgnY = -1);
     for (var i = 0; i < sgnX * dx + 1; i++) {
         for (var j = 0; j < sgnY * dy + 1; j++) {
             if (!corner(i, j, dx, dy)) {
-                getBox(x + sgnX * i, y + sgnY * j).setAttribute("fill", c);
+                myBox = getBox(x + sgnX * i, y + sgnY * j);
+                insideColor = myBox.getAttribute("fill");
+                myBox.setAttribute("fill", fillColor(cornerColor, insideColor));
             }
         }
     }
@@ -52,11 +55,44 @@ function corner(i, j, dx, dy) {
     return ((i == 0 && j == 0) || (i == Math.abs(dx) && j == 0) || (i == 0 && j == Math.abs(dy)) || (i == Math.abs(dx) && j == Math.abs(dy)))
 }
 
-function fillColor(color) {
-    if (color === "red") {
-        return "pink";
-    } else if (color === "blue") {
-        return "paleturquoise";
+function fillColor(cornerColor, insideColor) {
+    if (cornerColor === "red") {
+        switch (insideColor) {
+            case "blue":
+                return "blue";
+                break;
+            case "red":
+                return "red";
+                break;
+            case "pink":
+                return "red";
+                break;
+            case "white":
+                return "pink";
+                break;
+            case "paleturquoise":
+                return "white";
+                break;
+        }
+    }
+    if (cornerColor === "blue") {
+        switch (insideColor) {
+            case "blue":
+                return "blue";
+                break;
+            case "red":
+                return "red";
+                break;
+            case "pink":
+                return "white";
+                break;
+            case "white":
+                return "paleturquoise";
+                break;
+            case "paleturquoise":
+                return "blue";
+                break;
+        }
     }
 }
 
