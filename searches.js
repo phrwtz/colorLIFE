@@ -8,8 +8,9 @@ function findSquares(b) {
         dyArray = verticalMatches(x, y, c),
         squares = cornersMatch(x, y, dxArray, dyArray);
     diamonds = findDiamonds(b);
-    console.log("Squares = " + squares);
-    console.log("Diamonds = " + diamonds);
+    if (diamonds.length > 0) {
+        console.log("Diamonds = " + diamonds);
+    }
     for (var i = 0; i < squares.length; i++) {
         fillSquare(squares[i], c);
     }
@@ -54,7 +55,7 @@ function diamondsMatch(x, y, dfArray, dbArray) {
         for (j = 0; j < dbArray.length; j++) {
             db = dbArray[j];
             if (db == df) {
-                matchColor = getColor(x + 2 * bf, y);
+                matchColor = getColor(x + 2 * db, y);
             } else if (db == -df) {
                 matchColor = getColor(x, y + db * 2);
             }
@@ -141,30 +142,28 @@ function horiziontalMatches(x, y, color) {
     return arr;
 }
 
+//Check boxes in a forward diagonal line. (getColor returns an empty string is argument is outside the borders.)
 function forwardMatches(x, y, color) {
-    var arr = [];
-    //Check boxes in a forward diagonal line up to the borders
+    var arr = [],
+        checkColor;
     for (var i = 1 - size; i < size; i++) {
-        if ((x + i >= 0) && (x + i < size) && (y - i >= 0) && (y - i < size))
-        var checkColor = getColor(x + i, y - i);
+        checkColor = getColor(x + i, y - i);
         if ((color === checkColor) && (i != 0)) {
             arr.push(i);
         }
-        i++;
     }
     return arr;
 }
 
+//Check boxes in a backward diagonal line up to the borders. (getColor returns an empty string is argument is outside the borders.)
 function backwardMatches(x, y, color) {
-    var arr = [];
-    //Check boxes in a backward diagonal line up to the borders
+    var arr = [],
+        checkcolor;
     for (var i = 1 - size; i < size; i++) {
-        if ((x + i >= 0) && (x + i < size) && (y + i >= 0) && (y + i < size))
-        var checkColor = getColor(x + i, y + i);
+        checkColor = getColor(x + i, y + i);
         if ((color === checkColor) && (i != 0)) {
             arr.push(i);
         }
-        i++;
     }
     return arr;
 }
@@ -188,6 +187,6 @@ function getColor(x, y) {
     if (getBox(x, y)) {
         return getBox(x, y).getAttribute("fill");
     } else {
-        return null;
+        return "";
     }
 }
