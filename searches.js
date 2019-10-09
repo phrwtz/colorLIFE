@@ -2,14 +2,26 @@
 function findSquares(b) {
     var x = parseInt(b.id.split("_")[0]),
         y = parseInt(b.id.split("_")[1]),
-        c = getColor(x, y);
-    var dxArray = horiziontalMatches(x, y, c),
+        c = getColor(x, y),
+        diamonds,
+        dxArray = horiziontalMatches(x, y, c),
         dyArray = verticalMatches(x, y, c),
         squares = cornersMatch(x, y, dxArray, dyArray);
-    console.log(squares);
+    diamonds = findDiamonds(b);
+    console.log("Squares = " + squares);
+    console.log("Diamonds = " + diamonds);
     for (var i = 0; i < squares.length; i++) {
         fillSquare(squares[i], c);
     }
+}
+
+function findDiamonds(b) {
+    var x = parseInt(b.id.split("_")[0]),
+        y = parseInt(b.id.split("_")[1]),
+        c = getColor(x, y);
+    var forwardArray = forwardMatches(x, y, c),
+        backwardArray = backwardMatches(x, y, c);
+    return diamondsMatch(x, y, forwardArray, backwardArray);
 }
 
 function cornersMatch(x, y, dxArray, dyArray) {
@@ -29,6 +41,29 @@ function cornersMatch(x, y, dxArray, dyArray) {
         }
     }
     return squares;
+}
+
+function diamondsMatch(x, y, dfArray, dbArray) {
+    var color = getColor(x, y),
+        matchColor,
+        df,
+        db,
+        diamonds = [];
+    for (i = 0; i < dfArray.length; i++) {
+        df = dfArray[i];
+        for (j = 0; j < dbArray.length; j++) {
+            db = dbArray[j];
+            if (db == df) {
+                matchColor = getColor(x + 2 * bf, y);
+            } else if (db == -df) {
+                matchColor = getColor(x, y + db * 2);
+            }
+            if (color == matchColor) {
+                diamonds.push([x, y, df, db]);
+            }
+        }
+    }
+    return diamonds;
 }
 
 function fillSquare(square, cornerColor) {
@@ -106,6 +141,34 @@ function horiziontalMatches(x, y, color) {
     return arr;
 }
 
+function forwardMatches(x, y, color) {
+    var arr = [];
+    //Check boxes in a forward diagonal line up to the borders
+    for (var i = 1 - size; i < size; i++) {
+        if ((x + i >= 0) && (x + i < size) && (y - i >= 0) && (y - i < size))
+        var checkColor = getColor(x + i, y - i);
+        if ((color === checkColor) && (i != 0)) {
+            arr.push(i);
+        }
+        i++;
+    }
+    return arr;
+}
+
+function backwardMatches(x, y, color) {
+    var arr = [];
+    //Check boxes in a backward diagonal line up to the borders
+    for (var i = 1 - size; i < size; i++) {
+        if ((x + i >= 0) && (x + i < size) && (y + i >= 0) && (y + i < size))
+        var checkColor = getColor(x + i, y + i);
+        if ((color === checkColor) && (i != 0)) {
+            arr.push(i);
+        }
+        i++;
+    }
+    return arr;
+}
+
 function verticalMatches(x, y, color) {
     var arr = [];
     for (var i = 0; i < size; i++) {
@@ -122,5 +185,9 @@ function getBox(x, y) {
 }
 
 function getColor(x, y) {
-    return getBox(x, y).getAttribute("fill");
+    if (getBox(x, y)) {
+        return getBox(x, y).getAttribute("fill");
+    } else {
+        return null;
+    }
 }
