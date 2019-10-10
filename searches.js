@@ -7,14 +7,78 @@ function findSquares(b) {
         dxArray = horiziontalMatches(x, y, c),
         dyArray = verticalMatches(x, y, c),
         squares = cornersMatch(x, y, dxArray, dyArray);
-    diamonds = findDiamonds(b);
-    if (diamonds.length > 0) {
-        console.log("Diamonds = " + diamonds);
-    }
     for (var i = 0; i < squares.length; i++) {
+        console.log("Squares = " + squares);
         fillSquare(squares[i], c);
     }
+    diamonds = findDiamonds(b);
+    console.log("Diamonds = " + diamonds);
+    for (var j = 0; j < diamonds.length; j++) {
+        fillDiamond(diamonds[j], c);
+    }
 }
+
+function fillDiamond(diamond, color) {
+    var d = Math.abs(diamond[3]);
+    var topBox = findTop(diamond);
+    var diamondSize = Math.abs(diamond[3]);
+    var x = parseInt(topBox.id.split("_")[0]);
+    var y = parseInt(topBox.id.split("_")[1]);
+    var fBox,
+        fColor,
+        iColor,
+        deltaX = 1,
+        id;
+    for (var i = 1; i <= d; i++) {
+        for (var j = -deltaX; j <= deltaX; j++) {
+            id = (x + j) + "_" + (y + i);
+            fBox = document.getElementById(id);
+            iColor = fBox.getAttribute("fill")
+            fColor = fillColor(color, iColor)
+            fBox.setAttribute("fill", fColor);
+        }
+        deltaX++;
+    }
+    deltaX = d - 1;
+    for (i = d + 1; i < 2 * d; i++) {
+        for (var j = -deltaX; j <= deltaX; j++) {
+            id = (x + j) + "_" + (y + i);
+            fBox = document.getElementById(id);
+            iColor = fBox.getAttribute("fill")
+            fColor = fillColor(color, iColor)
+            fBox.setAttribute("fill", fColor);
+        }
+        deltaX--;
+    }
+}
+
+//Return the top box of the diamond
+function findTop(diamond) {
+    var x = diamond[0],
+        y = diamond[1],
+        df = diamond[2],
+        db = diamond[3];
+    var pos, id, d;
+    d = Math.abs(df);
+    if (df > 0 && db > 0) {
+        pos = "left";
+        id = (x + d) + "_" + (y - d);
+        return document.getElementById(id);
+    } else if (df > 0 && db < 0) {
+        pos = "bottom";
+        id = x + "_" + (y - 2 * d);
+        return document.getElementById(id);
+    } else if (df < 0 && db > 0) {
+        pos = "top";
+        id = x + "_" + y;
+        return document.getElementById(id);
+    } else if (df < 0 && db < 0) {
+        pos = "right";
+        id = (x - d) + "_" + (y - d);
+        return document.getElementById(id);
+    }
+}
+
 
 function findDiamonds(b) {
     var x = parseInt(b.id.split("_")[0]),
@@ -107,7 +171,7 @@ function fillColor(cornerColor, insideColor) {
                 return "pink";
                 break;
             case "paleturquoise":
-                return "white";
+                return "pink";
                 break;
         }
     }
@@ -120,7 +184,7 @@ function fillColor(cornerColor, insideColor) {
                 return "red";
                 break;
             case "pink":
-                return "white";
+                return "paleturquoise";
                 break;
             case "white":
                 return "paleturquoise";

@@ -2,7 +2,7 @@ var board = [];
 var colorToSet;
 var runFlag = false;
 var step = 0;
-var size = 9;
+var size = 19;
     ;
 var cont = document.getElementById("container");
 var boardRect = document.getElementById("boardRect");
