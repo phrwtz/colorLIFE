@@ -308,10 +308,13 @@ function setGreen() {
 }
 
 function setColorOnClick(id) {
+    var boxColor;
     if (colorToSet) {
         box = document.getElementById(id);
-        box.setAttribute("fill", colorToSet);
-        //      runOnce(box);
-        findSquares(box);
+        boxColor = box.getAttribute("fill");
+        if (!((colorToSet == "red" && boxColor == "blue") || (colorToSet == "blue" && boxColor == "red"))) {
+            box.setAttribute("fill", colorToSet);
+            findSquares(box);
+        }
     }
 }
