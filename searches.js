@@ -1,5 +1,5 @@
 //Search the board looking for "squares" – four tiles with the same fill color that occupy the corners of a square.
-function findSquares(b) {
+function findSquaresAndDiamonds(b) {
     var x = parseInt(b.id.split("_")[0]),
         y = parseInt(b.id.split("_")[1]),
         c = getColor(x, y),
@@ -16,6 +16,7 @@ function findSquares(b) {
     for (var j = 0; j < diamonds.length; j++) {
         fillDiamond(diamonds[j], c);
     }
+    score();
 }
 
 function fillDiamond(diamond, color) {
@@ -206,32 +207,6 @@ function horiziontalMatches(x, y, color) {
     return arr;
 }
 
-//Check boxes in a forward diagonal line. (getColor returns an empty string is argument is outside the borders.)
-function forwardMatches(x, y, color) {
-    var arr = [],
-        checkColor;
-    for (var i = 1 - size; i < size; i++) {
-        checkColor = getColor(x + i, y - i);
-        if ((color === checkColor) && (i != 0)) {
-            arr.push(i);
-        }
-    }
-    return arr;
-}
-
-//Check boxes in a backward diagonal line up to the borders. (getColor returns an empty string is argument is outside the borders.)
-function backwardMatches(x, y, color) {
-    var arr = [],
-        checkcolor;
-    for (var i = 1 - size; i < size; i++) {
-        checkColor = getColor(x + i, y + i);
-        if ((color === checkColor) && (i != 0)) {
-            arr.push(i);
-        }
-    }
-    return arr;
-}
-
 function verticalMatches(x, y, color) {
     var arr = [];
     for (var i = 0; i < size; i++) {
@@ -241,6 +216,7 @@ function verticalMatches(x, y, color) {
     }
     return arr;
 }
+
 
 function getBox(x, y) {
     var id = x.toString() + "_" + y.toString();

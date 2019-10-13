@@ -93,3 +93,31 @@ function fillDiamond(diamond, cornerColor) {
     fillOuterColumns(fillCorners, cornerColor);
     fillInnerSquare(fillCorners, cornerColor);
 }
+
+unction setWhite() {
+    colorToSet = "white";
+    redRect.setAttribute("fill", "pink");
+    blueRect.setAttribute("fill", "lightblue");
+    greenRect.setAttribute("fill", "lightgreen");
+}
+
+function setRed() {
+    colorToSet = "red";
+    redRect.setAttribute("fill", "red");
+    blueRect.setAttribute("fill", "lightblue");
+    //   greenRect.setAttribute("fill", "lightgreen");
+}
+
+function setBlue() {
+    colorToSet = "blue";
+    redRect.setAttribute("fill", "pink");
+    blueRect.setAttribute("fill", "blue");
+    //    greenRect.setAttribute("fill", "lightgreen");
+}
+
+function setGreen() {
+    colorToSet = "green";
+    redRect.setAttribute("fill", "pink");
+    blueRect.setAttribute("fill", "lightblue");
+    greenRect.setAttribute("fill", "green");
+}
