@@ -17,6 +17,7 @@ function findSquares(b) {
         fillDiamond(diamonds[j], c);
     } */
     score();
+ //   anySquaresLeft();
 }
 
 function fillDiamond(diamond, color) {
@@ -248,41 +249,45 @@ function setBlue() {
 function anySquaresLeft() {
     var thisColor,
         thatColor,
+        diagColor,
         matchingSquares;
     for (var x = 0; x < size; x++) {
         for (var y = 0; y < size; y++) {
             thisColor = getColor(x, y);
-            if (thisColor == "red") {
-                thatColor = "blue";
-            } else if (thisColor == "blue") {
-                thatColor = "red";
-            }
-            for (var i = -size; i < size; i++) {
-                matchingSquares = 0;
-                rowColor = getColor(x + i, y);
-                if (rowColor != thatColor) {
-                    if (rowColor == thisColor) {
-                        matchingSquares++;
-                    }
-                    colColor = getColor(x, y + i);
-                    if (colColor != thatColor) {
-                        if (colColor == thisColor) {
+            if ((thisColor == "red") || (thisColor == "blue")) {
+                if (thisColor == "red") {
+                    thatColor = "blue";
+                } else if (thisColor == "blue") {
+                    thatColor = "red";
+                }
+                for (var i = -size; i < size; i++) {
+                    matchingSquares = 0;
+                    rowColor = getColor(x + i, y);
+                    if ((rowColor != thatColor) && (rowColor != "") && (i != 0)) {
+                        if (rowColor == thisColor) {
                             matchingSquares++;
                         }
-                        diagColor = getColor(x + i, y + i);
-                        if (diagColor != thatColor) {
-                            if (diagColor == thisColor) {
+                        colColor = getColor(x, y + i);
+                        if ((colColor != thatColor) && (colColor != "")) {
+                            if (colColor == thisColor) {
                                 matchingSquares++;
                             }
-                            if (matchingSquares < 3) {
-                                return true;
+                            diagColor = getColor(x + i, y + i);
+                            if ((diagColor != thatColor) && (diagColor != "")) {
+                                if (diagColor == thisColor) {
+                                    matchingSquares++;
+                                    if (matchingSquares < 3) {
+                                        return true;
+                                    }
+                                }
                             }
                         }
                     }
                 }
+
             }
         }
-    }
+    4}
     alert("No square left!");
     return false;
 }

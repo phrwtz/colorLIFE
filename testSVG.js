@@ -2,7 +2,7 @@ var board = [];
 var colorToSet;
 var runFlag = false;
 var step = 0;
-var size = 5;
+var size = 8;
 var cont = document.getElementById("container");
 var boardRect = document.getElementById("boardRect");
 var whiteRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
@@ -10,7 +10,8 @@ var redRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
 var blueRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
 var greenRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
 var turnColor = "red",
-    turnNumber = 1;
+    turnNumber = 0, //First time only gets one turn
+    firstTurn = true;
 
 makeColorButtons();
 makeBoard();
@@ -152,9 +153,8 @@ function setColorOnClick(id) {
         box.setAttribute("fill", turnColor);
     }
     if (turnColor != "white") {
-        if (turnNumber == 1) {
-            turnNumber = 2;
-        } else if (turnNumber == 2) {
+        //If first time or second try switch colors
+        if ((turnNumber == 0) || (turnNumber == 2)) {
             turnNumber = 1;
             if (turnColor == "red") {
                 turnColor = "blue";
@@ -165,10 +165,10 @@ function setColorOnClick(id) {
                 redRect.setAttribute("fill", "red");
                 blueRect.setAttribute("fill", "lightblue");
             }
-        }
+        } else turnNumber = 2;
+        findSquares(box);
+        score();
     }
-    findSquares(box);
-    score();
 }
 
 function score() {
