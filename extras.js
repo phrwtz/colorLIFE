@@ -94,30 +94,45 @@ function fillDiamond(diamond, cornerColor) {
     fillInnerSquare(fillCorners, cornerColor);
 }
 
-unction setWhite() {
+function setWhite() {
     colorToSet = "white";
     redRect.setAttribute("fill", "pink");
     blueRect.setAttribute("fill", "lightblue");
     greenRect.setAttribute("fill", "lightgreen");
 }
 
-function setRed() {
-    colorToSet = "red";
-    redRect.setAttribute("fill", "red");
-    blueRect.setAttribute("fill", "lightblue");
-    //   greenRect.setAttribute("fill", "lightgreen");
-}
 
-function setBlue() {
-    colorToSet = "blue";
-    redRect.setAttribute("fill", "pink");
-    blueRect.setAttribute("fill", "blue");
-    //    greenRect.setAttribute("fill", "lightgreen");
-}
 
 function setGreen() {
     colorToSet = "green";
     redRect.setAttribute("fill", "pink");
     blueRect.setAttribute("fill", "lightblue");
     greenRect.setAttribute("fill", "green");
+}
+function forwardMatches(x, y, color) {
+    var arr = [];
+    for (var i = -size; i < size; i++) {
+        id = (x + i) + "_" + (y - i);
+        if (document.getElementById(id));
+        box = document.getElementById(id);
+        searchColor = getColor(box);
+        if ((searchColor === color) && (i != 0)) {
+            arr.push(i);
+        }
+    }
+    return arr;
+}
+
+function backwardMatches(x, y, color) {
+    var arr = [];
+    for (var i = -size; i < size; i++) {
+        id = (x + i) + "_" + (y + i);
+        if (document.getElementById(id));
+        box = document.getElementById(id);
+        searchColor = getColor(box);
+        if ((searchColor === color) && (i != 0)) {
+            arr.push(i);
+        }
+    }
+    return arr;
 }

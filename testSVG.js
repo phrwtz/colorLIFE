@@ -2,7 +2,7 @@ var board = [];
 var colorToSet;
 var runFlag = false;
 var step = 0;
-var size = 9;;
+var size = 5;
 var cont = document.getElementById("container");
 var boardRect = document.getElementById("boardRect");
 var whiteRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
@@ -167,7 +167,7 @@ function setColorOnClick(id) {
             }
         }
     }
-    findSquaresAndDiamonds(box);
+    findSquares(box);
     score();
 }
 

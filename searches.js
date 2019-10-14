@@ -1,5 +1,5 @@
 //Search the board looking for "squares" – four tiles with the same fill color that occupy the corners of a square.
-function findSquaresAndDiamonds(b) {
+function findSquares(b) {
     var x = parseInt(b.id.split("_")[0]),
         y = parseInt(b.id.split("_")[1]),
         c = getColor(x, y),
@@ -217,44 +217,72 @@ function verticalMatches(x, y, color) {
     return arr;
 }
 
-
-function forwardMatches(x, y, color) {
-    var arr = [];
-    for (var i = -size; i < size; i++) {
-        id = (x + i) + "_" + (y - i);
-        if (document.getElementById(id));
-        box = document.getElementById(id);
-        searchColor = getColor(box);
-        if ((searchColor === color) && (i != 0)) {
-            arr.push(i);
-        }
-    }
-    return arr;
-}
-
-function backwardMatches(x, y, color) {
-    var arr = [];
-    for (var i = -size; i < size; i++) {
-        id = (x + i) + "_" + (y + i);
-        if (document.getElementById(id));
-        box = document.getElementById(id);
-        searchColor = getColor(box);
-        if ((searchColor === color) && (i != 0)) {
-            arr.push(i);
-        }
-    }
-    return arr;
-}
-
 function getBox(x, y) {
     var id = x.toString() + "_" + y.toString();
     return document.getElementById(id);
 }
 
 function getColor(x, y) {
-    if (getBox(x, y)) {
+    if (x >= 0 && x < size && y >= 0 && y < size) {
         return getBox(x, y).getAttribute("fill");
     } else {
         return "";
     }
+}
+
+function setRed() {
+    colorToSet = "red";
+    redRect.setAttribute("fill", "red");
+    blueRect.setAttribute("fill", "lightblue");
+    //   greenRect.setAttribute("fill", "lightgreen");
+}
+
+function setBlue() {
+    colorToSet = "blue";
+    redRect.setAttribute("fill", "pink");
+    blueRect.setAttribute("fill", "blue");
+    //    greenRect.setAttribute("fill", "lightgreen");
+}
+
+//Search every box. Return true if there are  any squares left
+function anySquaresLeft() {
+    var thisColor,
+        thatColor,
+        matchingSquares;
+    for (var x = 0; x < size; x++) {
+        for (var y = 0; y < size; y++) {
+            thisColor = getColor(x, y);
+            if (thisColor == "red") {
+                thatColor = "blue";
+            } else if (thisColor == "blue") {
+                thatColor = "red";
+            }
+            for (var i = -size; i < size; i++) {
+                matchingSquares = 0;
+                rowColor = getColor(x + i, y);
+                if (rowColor != thatColor) {
+                    if (rowColor == thisColor) {
+                        matchingSquares++;
+                    }
+                    colColor = getColor(x, y + i);
+                    if (colColor != thatColor) {
+                        if (colColor == thisColor) {
+                            matchingSquares++;
+                        }
+                        diagColor = getColor(x + i, y + i);
+                        if (diagColor != thatColor) {
+                            if (diagColor == thisColor) {
+                                matchingSquares++;
+                            }
+                            if (matchingSquares < 3) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    alert("No square left!");
+    return false;
 }
