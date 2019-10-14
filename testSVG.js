@@ -174,19 +174,28 @@ function setColorOnClick(id) {
 function score() {
     var redCount = 0,
         blueCount = 0,
-        color,
-        box;
-        countPara.innerHTML = "";
-    for (x = 0; x < size; x++) {
-        for (y = 0; y < size; y++) {
-            box = getBox(x, y);
-            color = getColor(box);
-            if (color == "red") {
-                redCount++;
-            } else if (color == "blue") {
-                blueCount++
+        lightRedCount = 0,
+        lightBlueCount = 0,
+        color;
+    countPara.innerHTML = "";
+    for (var x = 0; x < size; x++) {
+        for (var y = 0; y < size; y++) {
+            color = getColor(x, y);
+            switch (color) {
+                case "red":
+                    redCount++;
+                    break;
+                case "blue":
+                    blueCount++;
+                    break;
+                case "pink":
+                    lightRedCount++;
+                    break;
+                case "paleturquoise":
+                    lightBlueCount++;
+                    break;
             }
         }
     }
-    countPara.innerHTML = ("<span style='color:red'>" + redCount + "</span>  <span style='color:blue'>" + blueCount + "</span>")
+    countPara.innerHTML = ("<span style='color:red; font-size:24'>" + redCount + ", </span> <span style='color:blue; font-size:24'>" + blueCount + ", </span> <span style='color:hotpink; font-size:24'>" + lightRedCount + ", </span><span style='color:cornflowerblue; font-size:24'>" + lightBlueCount + "</span >");
 }

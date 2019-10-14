@@ -11,11 +11,11 @@ function findSquaresAndDiamonds(b) {
         console.log("Squares = " + squares);
         fillSquare(squares[i], c);
     }
-    diamonds = findDiamonds(b);
+    /* diamonds = findDiamonds(b);
     console.log("Diamonds = " + diamonds);
     for (var j = 0; j < diamonds.length; j++) {
         fillDiamond(diamonds[j], c);
-    }
+    } */
     score();
 }
 
@@ -217,6 +217,34 @@ function verticalMatches(x, y, color) {
     return arr;
 }
 
+
+function forwardMatches(x, y, color) {
+    var arr = [];
+    for (var i = -size; i < size; i++) {
+        id = (x + i) + "_" + (y - i);
+        if (document.getElementById(id));
+        box = document.getElementById(id);
+        searchColor = getColor(box);
+        if ((searchColor === color) && (i != 0)) {
+            arr.push(i);
+        }
+    }
+    return arr;
+}
+
+function backwardMatches(x, y, color) {
+    var arr = [];
+    for (var i = -size; i < size; i++) {
+        id = (x + i) + "_" + (y + i);
+        if (document.getElementById(id));
+        box = document.getElementById(id);
+        searchColor = getColor(box);
+        if ((searchColor === color) && (i != 0)) {
+            arr.push(i);
+        }
+    }
+    return arr;
+}
 
 function getBox(x, y) {
     var id = x.toString() + "_" + y.toString();
