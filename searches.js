@@ -3,7 +3,7 @@ function findSquares(b) {
     var x = parseInt(b.id.split("_")[0]),
         y = parseInt(b.id.split("_")[1]),
         c = getColor(x, y),
-        diamonds,
+        //     diamonds,
         dxArray = horiziontalMatches(x, y, c),
         dyArray = verticalMatches(x, y, c),
         squares = cornersMatch(x, y, dxArray, dyArray);
@@ -19,79 +19,11 @@ function findSquares(b) {
     score();
     if (!(anySquaresLeft())) {
         console.log("No squares left!");
+        handleNoMoreSquares();
     };
 }
 
-function fillDiamond(diamond, color) {
-    var d = Math.abs(diamond[3]);
-    var topBox = findTop(diamond);
-    var diamondSize = Math.abs(diamond[3]);
-    var x = parseInt(topBox.id.split("_")[0]);
-    var y = parseInt(topBox.id.split("_")[1]);
-    var fBox,
-        fColor,
-        iColor,
-        deltaX = 1,
-        id;
-    for (var i = 1; i <= d; i++) {
-        for (var j = -deltaX; j <= deltaX; j++) {
-            id = (x + j) + "_" + (y + i);
-            fBox = document.getElementById(id);
-            iColor = fBox.getAttribute("fill")
-            fColor = fillColor(color, iColor)
-            fBox.setAttribute("fill", fColor);
-        }
-        deltaX++;
-    }
-    deltaX = d - 1;
-    for (i = d + 1; i < 2 * d; i++) {
-        for (var j = -deltaX; j <= deltaX; j++) {
-            id = (x + j) + "_" + (y + i);
-            fBox = document.getElementById(id);
-            iColor = fBox.getAttribute("fill")
-            fColor = fillColor(color, iColor)
-            fBox.setAttribute("fill", fColor);
-        }
-        deltaX--;
-    }
-}
 
-//Return the top box of the diamond
-function findTop(diamond) {
-    var x = diamond[0],
-        y = diamond[1],
-        df = diamond[2],
-        db = diamond[3];
-    var pos, id, d;
-    d = Math.abs(df);
-    if (df > 0 && db > 0) {
-        pos = "left";
-        id = (x + d) + "_" + (y - d);
-        return document.getElementById(id);
-    } else if (df > 0 && db < 0) {
-        pos = "bottom";
-        id = x + "_" + (y - 2 * d);
-        return document.getElementById(id);
-    } else if (df < 0 && db > 0) {
-        pos = "top";
-        id = x + "_" + y;
-        return document.getElementById(id);
-    } else if (df < 0 && db < 0) {
-        pos = "right";
-        id = (x - d) + "_" + (y - d);
-        return document.getElementById(id);
-    }
-}
-
-
-function findDiamonds(b) {
-    var x = parseInt(b.id.split("_")[0]),
-        y = parseInt(b.id.split("_")[1]),
-        c = getColor(x, y);
-    var forwardArray = forwardMatches(x, y, c),
-        backwardArray = backwardMatches(x, y, c);
-    return diamondsMatch(x, y, forwardArray, backwardArray);
-}
 
 function cornersMatch(x, y, dxArray, dyArray) {
     var c = getColor(x, y),
@@ -235,7 +167,7 @@ function getColor(x, y) {
 
 function setRed() {
     colorToSet = "red";
-    redRect.setAttribute("fill", "red");
+    colorRect.setAttribute("fill", "red");
     blueRect.setAttribute("fill", "lightblue");
     //   greenRect.setAttribute("fill", "lightgreen");
 }
@@ -251,7 +183,9 @@ function setBlue() {
 function anySquaresLeft() {
     for (var x = 0; x < size; x++) {
         for (var y = 0; y < size; y++) {
-            return checkAllSquares(x, y);
+            if (checkAllSquares(x, y)) {
+                return true;
+            }
         }
     }
 }
@@ -268,8 +202,9 @@ function checkAllSquares(x, y) {
         downRightColor,
         downLeftColor,
         thisColor = getColor(x, y),
-        noPotentialSquareFound = true;
-    for (var i = 0; i < size; i++) {
+        thatColor = "";
+    noPotentialSquareFound = true;
+    for (var i = 2; i < size; i++) {
         leftColor = getColor(x - i, y);
         rightColor = getColor(x + i, y);
         upColor = getColor(x, y - i)
@@ -284,26 +219,76 @@ function checkAllSquares(x, y) {
             thatColor = "red";
         }
         //Check the eight possible squares, one by one
-        if (checkOneSquare(thisColor, thatColor, upColor, rightColor, upRightColor)) {
+        if (checkOneSquare(x, y, thisColor, thatColor, upColor, rightColor, upRightColor)) {
+            console.log("up right square found at " + x + ", " + y + ", i = " + i);
             return true;
         }
-        if (checkOneSquare(thisColor, thatColor, upColor, leftColor, upLeftColor)) {
+        if (checkOneSquare(x, y, thisColor, thatColor, upColor, leftColor, upLeftColor)) {
+            console.log("up left square found at " + x + ", " + y + ", i = " + i);
             return true;
         }
-        if (checkOneSquare(thisColor, thatColor, downColor, rightColor, downRightColor)) {
+        if (checkOneSquare(x, y, thisColor, thatColor, downColor, rightColor, downRightColor)) {
+            console.log("down right square found at " + x + ", " + y + ", i = " + i);
             return true;
         };
-        if (checkOneSquare(thisColor, thatColor, downColor, leftColor, downLeftColor)) {
+        if (checkOneSquare(x, y, thisColor, thatColor, downColor, leftColor, downLeftColor)) {
+            console.log("down left square found at " + x + ", " + y + ", i = " + i);
             return true;
         }
     }
+    return false;
 }
 
-// Check that color1, color2, and color3 are not empty, that none of them is equal to thatColor, and that at least one of them is not thisColor. Return true if a square is possible.
-function checkOneSquare(thisColor, thatColor, color1, color2, color3) {
-    if (((color1 != "") && (color2 != "") && (color3 != "")) && ((color1 != thatColor) && (color2 != thatColor) && (color3 != thatColor)) && !((color1 == thisColor) && (color2 == thisColor) && (color3 == thisColor))) {
-        return true;
-    } else {
-        return false;
+// Check that it is possible to form a square from the input square at (x, y). For this to be true, color1, color2, and color3 must not be the empty string (meaning that they are off the board), and none of them can be equal to thatColor (which itself will be the empty string in thisColor is neither blue nor red). If thisColor is blue or red, check to see that at least one of the three corner colors is not thisColor (if all three are thisColor then the square is already formed). If thisColor is neither blue nor red, check to be sure that the other three colors don't include both red and blue. Return true if it is possible to form a square from the square (x, y).
+function checkOneSquare(x, y, thisColor, thatColor, color1, color2, color3) {
+    var returnVal = false,
+        redCount = 0,
+        blueCount = 0,
+        colorArray = [color1, color2, color3];
+    if (((color1 != "") && (color2 != "") && (color3 != "")) && ((color1 != thatColor) && (color2 != thatColor) && (color3 != thatColor))) {
+        if ((thisColor == "red") || (thisColor == "blue")) {
+            if (!((color1 == thisColor) && (color2 == thisColor) && (color3 == thisColor))) {
+                returnVal = true;
+            }
+        } else {
+            for (var i = 0; i < 3; i++) {
+                if (colorArray[i] == "red") {
+                    redCount++;
+                } else if (colorArray[i] == "blue") {
+                    blueCount++;
+                }
+            }
+            if ((redCount > 0) && (blueCount > 0)) {
+                returnVal = false;
+            } else {
+                returnVal = true;
+            }
+        }
+    }
+    return returnVal;
+}
+
+function handleNoMoreSquares() {
+    changeLightColors();
+    score();
+    var messagePara = document.getElementById("messagePara");
+    messagePara.style.display = "inline";
+    messagePara.style.fontSize = 30;
+    messagePara.innerHTML = "<b>No squares available!</b><br><br>"
+}
+
+function changeLightColors() {
+    var box,
+        color;
+    for (var x = 0; x < size; x++) {
+        for (var y = 0; y < size; y++) {
+            box = getBox(x, y);
+            color = getColor(x, y);
+            if (color == 'pink') {
+                box.setAttribute("fill", "red");
+            } else if (color == 'paleturquoise') {
+                box.setAttribute("fill", "blue");
+            }
+        }
     }
 }

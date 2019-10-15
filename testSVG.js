@@ -2,65 +2,20 @@ var board = [];
 var colorToSet;
 var runFlag = false;
 var step = 0;
-var size = 5;
+var size = 17;
 var cont = document.getElementById("container");
 var boardRect = document.getElementById("boardRect");
-var whiteRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-var redRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-var blueRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-var greenRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+var colorRect = document.getElementById("colorRect");
 var turnColor = "red",
     turnNumber = 0, //First time only gets one turn
     firstTurn = true;
-
-makeColorButtons();
+centerColorRect();
 makeBoard();
 
-function makeColorButtons() {
-    whiteRect.setAttribute("id", "whiteRect");
-    whiteRect.setAttribute("width", "40");
-    whiteRect.setAttribute("height", "40");
-    whiteRect.setAttribute("x", "0px");
-    whiteRect.setAttribute("y", "0px");
-    whiteRect.setAttribute("stroke", "black");
-    whiteRect.setAttribute("stroke-width", "2");
-    whiteRect.setAttribute("fill", "white");
-    whiteRect.setAttribute("onclick", "setWhite()");
-    redRect.setAttribute("id", "redRect");
-    redRect.setAttribute("width", "40");
-    redRect.setAttribute("height", "40");
-    redRect.setAttribute("x", "50px");
-    redRect.setAttribute("y", "0");
-    redRect.setAttribute("stroke", "black");
-    redRect.setAttribute("stroke-width", "2");
-    redRect.setAttribute("fill", "red");
-    redRect.setAttribute("onclick", "setRed()");
-    blueRect.setAttribute("id", "blueRect");
-    blueRect.setAttribute("width", "40");
-    blueRect.setAttribute("height", "40");
-    blueRect.setAttribute("x", "100");
-    blueRect.setAttribute("y", "0");
-    blueRect.setAttribute("stroke", "black");
-    blueRect.setAttribute("stroke-width", "2");
-    blueRect.setAttribute("fill", "lightblue");
-    blueRect.setAttribute("onclick", "setBlue()");
-    /*greenRect.setAttribute("id", "greenRect");
-    greenRect.setAttribute("width", "40");
-    greenRect.setAttribute("height", "40");
-    greenRect.setAttribute("x", "150");
-    greenRect.setAttribute("y", "0");
-    greenRect.setAttribute("stroke", "black");
-    greenRect.setAttribute("stroke-width", "2");
-    greenRect.setAttribute("fill", "lightgreen");
-    greenRect.setAttribute("onclick", "setGreen()");
-    */
-    cont.appendChild(whiteRect);
-    cont.appendChild(redRect);
-    cont.appendChild(blueRect);
-    cont.appendChild(whiteRect);
-    //cont.appendChild(greenRect);
+function centerColorRect() {
+    var shift = 80 + (size * 20);
+    colorRect.setAttribute("x", shift.toString());
 }
-
 function makeBoard() {
     var row = [];
     for (var i = 0; i < size; i++) {
@@ -152,23 +107,19 @@ function setColorOnClick(id) {
     if (!((turnColor == "red" && boxColor == "blue") || (turnColor == "blue" && boxColor == "red"))) {
         box.setAttribute("fill", turnColor);
     }
-    if (turnColor != "white") {
-        //If first time or second try switch colors
-        if ((turnNumber == 0) || (turnNumber == 2)) {
-            turnNumber = 1;
-            if (turnColor == "red") {
-                turnColor = "blue";
-                redRect.setAttribute("fill", "pink");
-                blueRect.setAttribute("fill", "blue");
-            } else if (turnColor == "blue") {
-                turnColor = "red";
-                redRect.setAttribute("fill", "red");
-                blueRect.setAttribute("fill", "lightblue");
-            }
-        } else turnNumber = 2;
-        findSquares(box);
-        score();
-    }
+    //If first time or second try switch colors
+    if ((turnNumber == 0) || (turnNumber == 2)) {
+        turnNumber = 1;
+        if (turnColor == "red") {
+            turnColor = "blue";
+            colorRect.setAttribute("fill", "blue");
+        } else if (turnColor == "blue") {
+            turnColor = "red";
+            colorRect.setAttribute("fill", "blue");
+        }
+    } else turnNumber = 2;
+    findSquares(box);
+    score();
 }
 
 function score() {
