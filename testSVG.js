@@ -2,7 +2,7 @@ var board = [];
 var colorToSet;
 var runFlag = false;
 var step = 0;
-var size = 17;
+var size = 8;
 var cont = document.getElementById("container");
 var boardRect = document.getElementById("boardRect");
 var colorRect = document.getElementById("colorRect");
@@ -11,10 +11,12 @@ var turnColor = "red",
     firstTurn = true;
 centerColorRect();
 makeBoard();
+countPara.innerHTML = ("<span style='color:red; font-size:24'>" + 0 + ", </span> <span style='color:blue; font-size:24'>" + 0 + ", </span> <span style='color:hotpink; font-size:24'>" + 0 + ", </span><span style='color:cornflowerblue; font-size:24'>" + 0 + "</span >");
 
 function centerColorRect() {
     var shift = 80 + (size * 20);
     colorRect.setAttribute("x", shift.toString());
+    colorRect.setAttribute("fill", "red");
 }
 function makeBoard() {
     var row = [];
@@ -115,7 +117,7 @@ function setColorOnClick(id) {
             colorRect.setAttribute("fill", "blue");
         } else if (turnColor == "blue") {
             turnColor = "red";
-            colorRect.setAttribute("fill", "blue");
+            colorRect.setAttribute("fill", "red");
         }
     } else turnNumber = 2;
     findSquares(box);
