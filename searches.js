@@ -17,7 +17,9 @@ function findSquares(b) {
         fillDiamond(diamonds[j], c);
     } */
     score();
- //   anySquaresLeft();
+    if (!(anySquaresLeft())) {
+        console.log("No squares left!");
+    };
 }
 
 function fillDiamond(diamond, color) {
@@ -245,49 +247,63 @@ function setBlue() {
     //    greenRect.setAttribute("fill", "lightgreen");
 }
 
-//Search every box. Return true if there are  any squares left
+//Search every box. Return true if there are any squares left to be formed
 function anySquaresLeft() {
-    var thisColor,
-        thatColor,
-        diagColor,
-        matchingSquares;
     for (var x = 0; x < size; x++) {
         for (var y = 0; y < size; y++) {
-            thisColor = getColor(x, y);
-            if ((thisColor == "red") || (thisColor == "blue")) {
-                if (thisColor == "red") {
-                    thatColor = "blue";
-                } else if (thisColor == "blue") {
-                    thatColor = "red";
-                }
-                for (var i = -size; i < size; i++) {
-                    matchingSquares = 0;
-                    rowColor = getColor(x + i, y);
-                    if ((rowColor != thatColor) && (rowColor != "") && (i != 0)) {
-                        if (rowColor == thisColor) {
-                            matchingSquares++;
-                        }
-                        colColor = getColor(x, y + i);
-                        if ((colColor != thatColor) && (colColor != "")) {
-                            if (colColor == thisColor) {
-                                matchingSquares++;
-                            }
-                            diagColor = getColor(x + i, y + i);
-                            if ((diagColor != thatColor) && (diagColor != "")) {
-                                if (diagColor == thisColor) {
-                                    matchingSquares++;
-                                    if (matchingSquares < 3) {
-                                        return true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-            }
+            return checkAllSquares(x, y);
         }
-    4}
-    alert("No square left!");
-    return false;
+    }
+}
+
+
+//Look for the potential of forming a square from the position x, y. In principal there are four possibilities. For any one of them to be a potential square of length i the other three corners must (a) all be on the board (color != ""), (b) not be the wrong color (for red that's blue, and vice versa), and (c) not already be the same color as the square we're examining. As soon as we find a potential square, we break out of the function.
+function checkAllSquares(x, y) {
+    var leftColor,
+        rightColor,
+        upColor,
+        downColor,
+        upRightColor,
+        upLeftColor,
+        downRightColor,
+        downLeftColor,
+        thisColor = getColor(x, y),
+        noPotentialSquareFound = true;
+    for (var i = 0; i < size; i++) {
+        leftColor = getColor(x - i, y);
+        rightColor = getColor(x + i, y);
+        upColor = getColor(x, y - i)
+        downColor = getColor(x, y + i)
+        upRightColor = getColor(x + i, y - i);
+        upLeftColor = getColor(x - i, y - i);
+        downRightColor = getColor(x + i, y + i);
+        downLeftColor = getColor(x - i, y + i);
+        if (thisColor == "red") {
+            thatColor = "blue";
+        } else if (thisColor == "blue") {
+            thatColor = "red";
+        }
+        //Check the eight possible squares, one by one
+        if (checkOneSquare(thisColor, thatColor, upColor, rightColor, upRightColor)) {
+            return true;
+        }
+        if (checkOneSquare(thisColor, thatColor, upColor, leftColor, upLeftColor)) {
+            return true;
+        }
+        if (checkOneSquare(thisColor, thatColor, downColor, rightColor, downRightColor)) {
+            return true;
+        };
+        if (checkOneSquare(thisColor, thatColor, downColor, leftColor, downLeftColor)) {
+            return true;
+        }
+    }
+}
+
+// Check that color1, color2, and color3 are not empty, that none of them is equal to thatColor, and that at least one of them is not thisColor. Return true if a square is possible.
+function checkOneSquare(thisColor, thatColor, color1, color2, color3) {
+    if (((color1 != "") && (color2 != "") && (color3 != "")) && ((color1 != thatColor) && (color2 != thatColor) && (color3 != thatColor)) && !((color1 == thisColor) && (color2 == thisColor) && (color3 == thisColor))) {
+        return true;
+    } else {
+        return false;
+    }
 }
