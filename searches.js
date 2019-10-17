@@ -274,7 +274,8 @@ function handleNoMoreSquares() {
     var messagePara = document.getElementById("messagePara");
     messagePara.style.display = "inline";
     messagePara.style.fontSize = 30;
-    messagePara.innerHTML = "<b>No squares available!</b><br><br>"
+    messagePara.innerHTML = "<b>No squares available!</b><br><br>";
+    squaresAvailable = false;
 }
 
 function changeLightColors() {

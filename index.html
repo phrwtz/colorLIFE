@@ -1,20 +1,20 @@
 <html>
+
 <head>
     <style>
-        #colorDiv {
-            height:300px;
-            width:500px;
+        div {
+            margin-left: 100px;
         }
     </style>
 </head>
-<body>
-    <h1>Welcome to ColorLife!</h1>
-    <input type="button" id="boardButton" onclick="clearBoard()" value="Clear board"
-        style="display:inline;margin-right:10px:" />
 
-    <p id="countPara" style="display:block">
-    </p>
-    <p id="messagePara" style="display:none"></p>
+<body>
+    <h1>Welcome to Square Off!</h1>
+    <div id="inputDiv">
+        <p id="countPara" style="display:block">
+        </p>
+        <p id="messagePara" style="display:none"></p>
+    </div>
 
     <svg id="container" width="100%" height="100%">
         <rect id="colorRect" width="40" height="40"></rect>
@@ -23,6 +23,7 @@
     </svg>
     <script src="testSVG.js"></script>
     <script src="searches.js"></script>
+    <script src="snap.svg.js"></script>
 
 </body>
 

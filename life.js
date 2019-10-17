@@ -69,7 +69,6 @@ function runRules(box) {
     var id = box.getAttribute("id"),
         x = parseInt(id.split("_")[0]),
         y = parseInt(id.split("_")[1]);
-    step++;
     counts = countNeighboringColors(box);
     thisColor = box.getAttribute("fill");
     r = counts.red;

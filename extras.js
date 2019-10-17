@@ -205,3 +205,17 @@ function findDiamonds(b) {
         backwardArray = backwardMatches(x, y, c);
     return diamondsMatch(x, y, forwardArray, backwardArray);
 }
+
+function clearBoard() {
+    var countPara = document.getElementById("countPara");
+    for (x = 0; x < size; x++) {
+        for (y = 0; y < size; y++) {
+            var box = document.getElementById(board[x][y]);
+            box.setAttribute("fill", "white");
+        }
+    }
+    step = 0;
+    toggleRunButton.value = "Run";
+    runFlag = false;
+    countPara.innerHTML = "";
+}
