@@ -1,5 +1,5 @@
 var board = [];
-var size = 8;
+var size = 20;
 var colorToSet;
 var runFlag = false;
 var cont = document.getElementById("container");
@@ -95,50 +95,54 @@ function setColorOnClick(id) {
         var boxColor;
         box = document.getElementById(id);
         boxColor = box.getAttribute("fill");
-        if (!((turnColor == "red" && boxColor == "blue") || (turnColor == "blue" && boxColor == "red"))) {
-            box.setAttribute("fill", turnColor);
-        }
-        //If first time or second try switch colors
-        if ((turnNumber == 0) || (turnNumber == 2)) {
-            turnNumber = 1;
-            if (turnColor == "red") {
-                turnColor = "blue";
-                colorRect.setAttribute("fill", "blue");
-            } else if (turnColor == "blue") {
-                turnColor = "red";
-                colorRect.setAttribute("fill", "red");
+        if ((boxColor != "red") && (boxColor != "blue")) {
+            if (!((turnColor == "red" && boxColor == "blue") || (turnColor == "blue" && boxColor == "red"))) {
+                box.setAttribute("fill", turnColor);
             }
-        } else turnNumber = 2;
-        findSquares(box);
-        score();
+            //If first time or second try switch colors
+            if ((turnNumber == 0) || (turnNumber == 2)) {
+                turnNumber = 1;
+                if (turnColor == "red") {
+                    turnColor = "blue";
+                    colorRect.setAttribute("fill", "blue");
+                } else if (turnColor == "blue") {
+                    turnColor = "red";
+                    colorRect.setAttribute("fill", "red");
+                }
+            } else turnNumber = 2;
+            findSquares(box);
+            score();
+        }
     }
 }
 
-    function score() {
-        var redCount = 0,
-            blueCount = 0,
-            lightRedCount = 0,
-            lightBlueCount = 0,
-            color;
-        countPara.innerHTML = "";
-        for (var x = 0; x < size; x++) {
-            for (var y = 0; y < size; y++) {
-                color = getColor(x, y);
-                switch (color) {
-                    case "red":
-                        redCount++;
-                        break;
-                    case "blue":
-                        blueCount++;
-                        break;
-                    case "pink":
-                        lightRedCount++;
-                        break;
-                    case "paleturquoise":
-                        lightBlueCount++;
-                        break;
-                }
+function score() {
+    var redCount = 0,
+        blueCount = 0,
+        lightRedCount = 0,
+        lightBlueCount = 0,
+        color;
+    countPara.innerHTML = "";
+    for (var x = 0; x < size; x++) {
+        for (var y = 0; y < size; y++) {
+            color = getColor(x, y);
+            switch (color) {
+                case "red":
+                    redCount++;
+                    break;
+                case "blue":
+                    blueCount++;
+                    break;
+                case "pink":
+                    lightRedCount++;
+                    break;
+                case "paleturquoise":
+                    lightBlueCount++;
+                    break;
             }
         }
-        countPara.innerHTML = ("<span style='color:red; font-size:24'>" + redCount + ", </span> <span style='color:blue; font-size:24'>" + blueCount + ", </span> <span style='color:hotpink; font-size:24'>" + lightRedCount + ", </span><span style='color:cornflowerblue; font-size:24'>" + lightBlueCount + "</span >");
     }
+    countPara.innerHTML = ("<span style='color:red; font-size:24'>" + redCount + ", </span> <span style='color:blue; font-size:24'>" + blueCount + ", </span> <span style='color:hotpink; font-size:24'>" + lightRedCount + ", </span><span style='color:cornflowerblue; font-size:24'>" + lightBlueCount + "</span >");
+}
+
+function doNothing() {};
