@@ -7,23 +7,8 @@ function findSquares(b) {
         dxArray = horiziontalMatches(x, y, c),
         dyArray = verticalMatches(x, y, c),
         squares = cornersMatch(x, y, dxArray, dyArray);
-    for (var i = 0; i < squares.length; i++) {
-        console.log("Squares = " + squares);
-        fillSquare(squares[i], c);
-    }
-    /* diamonds = findDiamonds(b);
-    console.log("Diamonds = " + diamonds);
-    for (var j = 0; j < diamonds.length; j++) {
-        fillDiamond(diamonds[j], c);
-    } */
-    score();
-    if (!(anySquaresLeft())) {
-        console.log("No squares left!");
-        handleNoMoreSquares();
-    };
+    return squares;
 }
-
-
 
 function cornersMatch(x, y, dxArray, dyArray) {
     var c = getColor(x, y),
@@ -44,30 +29,7 @@ function cornersMatch(x, y, dxArray, dyArray) {
     return squares;
 }
 
-function diamondsMatch(x, y, dfArray, dbArray) {
-    var color = getColor(x, y),
-        matchColor,
-        df,
-        db,
-        diamonds = [];
-    for (i = 0; i < dfArray.length; i++) {
-        df = dfArray[i];
-        for (j = 0; j < dbArray.length; j++) {
-            db = dbArray[j];
-            if (db == df) {
-                matchColor = getColor(x + 2 * db, y);
-            } else if (db == -df) {
-                matchColor = getColor(x, y + db * 2);
-            }
-            if (color == matchColor) {
-                diamonds.push([x, y, df, db]);
-            }
-        }
-    }
-    return diamonds;
-}
-
-function fillSquare(square, cornerColor) {
+function fillSquare(square, color) {
     var x = square[0],
         y = square[1],
         dx = square[2],
@@ -81,7 +43,7 @@ function fillSquare(square, cornerColor) {
             if (!corner(i, j, dx, dy)) {
                 myBox = getBox(x + sgnX * i, y + sgnY * j);
                 insideColor = myBox.getAttribute("fill");
-                myBox.setAttribute("fill", fillColor(cornerColor, insideColor));
+                myBox.setAttribute("fill", fillColor(color, insideColor));
             }
         }
     }
@@ -181,15 +143,16 @@ function setBlue() {
 
 //Search every box. Return true if there are any squares left to be formed
 function anySquaresLeft() {
+    var thisColor;
     for (var x = 0; x < size; x++) {
         for (var y = 0; y < size; y++) {
-            if (checkAllSquares(x, y)) {
-                return true;
+            thisColor = getColor(x, y);
+            if ((thisColor != "red") && (thisColor != "blue")) {
+                return checkAllSquares(x, y)
             }
         }
     }
 }
-
 
 //Look for the potential of forming a square from the position x, y. In principal there are four possibilities. For any one of them to be a potential square of length i the other three corners must (a) all be on the board (color != ""), (b) not be the wrong color (for red that's blue, and vice versa), and (c) not already be the same color as the square we're examining. As soon as we find a potential square, we break out of the function.
 function checkAllSquares(x, y) {

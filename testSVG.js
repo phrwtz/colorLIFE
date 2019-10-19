@@ -1,5 +1,6 @@
+//global variables
 var board = [];
-var size = 20;
+var size = 14;
 var colorToSet;
 var runFlag = false;
 var cont = document.getElementById("container");
@@ -44,75 +45,53 @@ function makeBoard() {
     }
 }
 
-function drawLine(x1, y1, x2, y2, id) {
-    var myLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    myLine.id = id;
-    myLine.setAttribute("x1", x1);
-    myLine.setAttribute("y1", y1);
-    myLine.setAttribute("x2", x2);
-    myLine.setAttribute("y2", y2);
-    myLine.setAttribute("stroke", "black");
-    myLine.setAttribute("stroke-width", "2");
-    cont.appendChild(myLine);
-}
-
-function removeLine(id) {
-    var myLine = document.getElementById(id);
-    if (myLine) {
-        cont.removeChild(myLine);
-    }
-}
-
-function drawBackwardLine(id) {
-    removeLine("backLine");
-    var box = document.getElementById(id);
-    var x = parseInt(id.split("_")[0]);
-    var y = parseInt(id.split("_")[1]);
-    if (x > y) {
-        x1 = 100 + 40 * (x - y);
-        y1 = 100;
-        x2 = 100 + 40 * size;
-        y2 = 100 + y + 40 * (x - y);
-    } else if (x < y) {
-        x1 = 100;
-        y1 = 100 + (y - x) * 40;
-        x2 = x1 + 40 * (y - x);
-        y2 = y1 + 40 * size;
-    } else {
-        x1 = 100;
-        y1 = 100;
-        x2 = 100 + 40 * size;
-        y2 = 100 + 40 * size;
-    }
-    console.log("x= " + x + " y= " + y + " x1= " + x1 + " y1= " + y1 + " x2= " + x2 + " y2= " + y2);
-    drawLine(x1, y1, x2, y2, "backLine");
-}
-
-
-
 function setColorOnClick(id) {
     if (squaresAvailable) {
-        var boxColor;
+        var boxColor,
+            squares,
+            diamonds;
         box = document.getElementById(id);
         boxColor = box.getAttribute("fill");
+        //Do nothing if box is already either red or blue
         if ((boxColor != "red") && (boxColor != "blue")) {
-            if (!((turnColor == "red" && boxColor == "blue") || (turnColor == "blue" && boxColor == "red"))) {
-                box.setAttribute("fill", turnColor);
-            }
-            //If first time or second try switch colors
-            if ((turnNumber == 0) || (turnNumber == 2)) {
-                turnNumber = 1;
-                if (turnColor == "red") {
-                    turnColor = "blue";
-                    colorRect.setAttribute("fill", "blue");
-                } else if (turnColor == "blue") {
-                    turnColor = "red";
-                    colorRect.setAttribute("fill", "red");
-                }
-            } else turnNumber = 2;
-            findSquares(box);
-            score();
+            //If it's any other color, make it turnColor
+            box.setAttribute("fill", turnColor);
         }
+        //Now that we have the box colored, find squares
+        squares = findSquares(box);
+        //and fill them.
+        fillSquares(squares, turnColor);
+        //Find diamonds
+        diamonds = findDiamonds(box);
+        //and fill them.
+        fillDiamonds(diamonds, turnColor);
+        //Update the score
+        score();
+        //If this is the first move or the second turn by the same color, toggle turnColors
+        if ((turnNumber == 0) || (turnNumber == 2)) {
+            //If we're switching colors...
+            turnNumber = 1;
+            if (turnColor == "red") {
+                turnColor = "blue";
+            } else if (turnColor == "blue") {
+                turnColor = "red";
+            }
+            colorRect.setAttribute("fill", turnColor)
+        } else {
+            turnNumber = 2;
+        }
+        //Look to see if there are any more squares or diamonds
+        if (!(anySquaresLeft())) {
+            console.log("No squares left!");
+            handleNoMoreSquares();
+        }
+    }
+}
+
+function fillSquares(squares,c) {
+    for (var i = 0; i < squares.length; i++) {
+        console.log("Squares = " + squares);
+        fillSquare(squares[i], c);
     }
 }
 
@@ -144,5 +123,3 @@ function score() {
     }
     countPara.innerHTML = ("<span style='color:red; font-size:24'>" + redCount + ", </span> <span style='color:blue; font-size:24'>" + blueCount + ", </span> <span style='color:hotpink; font-size:24'>" + lightRedCount + ", </span><span style='color:cornflowerblue; font-size:24'>" + lightBlueCount + "</span >");
 }
-
-function doNothing() {};
