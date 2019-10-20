@@ -1,6 +1,6 @@
 //global variables
 var board = [];
-var size = 14;
+var size = 8;
 var colorToSet;
 var runFlag = false;
 var cont = document.getElementById("container");
@@ -37,12 +37,83 @@ function makeBoard() {
             myRect.setAttribute("fill", "white");
             myRect.setAttribute("id", i.toString() + "_" + j.toString());
             myRect.setAttribute("onclick", "setColorOnClick(this.getAttribute('id'))");
-            //     myRect.setAttribute("onmouseover", "drawBackwardLine(this.getAttribute('id'))");;
+            myRect.setAttribute("onmouseenter", "drawBackwardLine(this.getAttribute('id'));drawForwardLine(this.getAttribute('id'))");
+            myRect.setAttribute("onmouseleave", "removeLines()");
             cont.appendChild(boardRect);
             cont.appendChild(myRect);
             board[i].push(myRect.id);
         }
     }
+}
+
+function removeLines() {
+    var forwardLine = document.getElementById("forward");
+    var backwardLine = document.getElementById("backward");
+    if (forwardLine) {
+        cont.removeChild(forwardLine);
+    }
+    if (backwardLine) {
+        cont.removeChild(backwardLine);
+    }
+}
+
+function drawForwardLine(id) {
+    if (event.ctrlKey) {
+        var box = document.getElementById(id);
+        var x = parseInt(id.split("_")[0]);
+        var y = parseInt(id.split("_")[1]);
+        if (x + y < size) {
+            x1 = 100;
+            y1 = 140 + 40 * (x + y);
+            x2 = 140 + 40 * (x + y);
+            y2 = 100;
+        } else if (x + y >= size) {
+            x1 = 140 + 40 * (x - (size - y));
+            y1 = 100 + 40 * size;
+            x2 = 100 + 40 * size;
+            y2 = 140 + 40 * (y - (size - x));
+        }
+        console.log("x= " + x + " y= " + y + " x1= " + x1 + " y1= " + y1 + " x2= " + x2 + " y2= " + y2);
+        drawLine(x1, y1, x2, y2, "forward");
+    }
+}
+
+function drawBackwardLine(id) {
+    if (event.ctrlKey) {
+        var box = document.getElementById(id);
+        var x = parseInt(id.split("_")[0]);
+        var y = parseInt(id.split("_")[1]);
+        if (x > y) {
+            x1 = 100 + 40 * (x - y);
+            y1 = 100;
+            x2 = 100 + 40 * size;
+            y2 = y1 + x2 - x1;
+        } else if (x < y) {
+            x1 = 100;
+            y1 = 100 + 40 * (y - x);
+            y2 = 100 + 40 * size;
+            x2 = x1 + y2 - y1;
+        } else {
+            x1 = 100;
+            y1 = 100;
+            x2 = 100 + 40 * size;
+            y2 = 100 + 40 * size;
+        }
+        drawLine(x1, y1, x2, y2, "backward");
+    }
+}
+
+
+function drawLine(x1, y1, x2, y2, id) {
+    var myLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    myLine.setAttribute("id", id);
+    myLine.setAttribute("x1", x1);
+    myLine.setAttribute("y1", y1);
+    myLine.setAttribute("x2", x2);
+    myLine.setAttribute("y2", y2);
+    myLine.setAttribute("stroke", "black");
+    myLine.setAttribute("stroke-width", "1");
+    cont.appendChild(myLine);
 }
 
 function setColorOnClick(id) {
@@ -88,7 +159,7 @@ function setColorOnClick(id) {
     }
 }
 
-function fillSquares(squares,c) {
+function fillSquares(squares, c) {
     for (var i = 0; i < squares.length; i++) {
         console.log("Squares = " + squares);
         fillSquare(squares[i], c);
