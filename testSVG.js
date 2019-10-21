@@ -228,4 +228,9 @@ function score() {
         }
     }
     countPara.innerHTML = ("<span style='color:red; font-size:24'>" + redCount + ", </span> <span style='color:blue; font-size:24'>" + blueCount + ", </span> <span style='color:hotpink; font-size:24'>" + lightRedCount + ", </span><span style='color:cornflowerblue; font-size:24'>" + lightBlueCount + "</span >");
+    if (redCount > size * size / 2) {
+        countPara.innerHTML += "<br><span style='font-size:32;color:red'> Red wins! </span>";
+    } else if (blueCount > size * size / 2) {
+        countPara.innerHTML += "<br><span style='font-size:32;color:blue'> Blue wins! </span>";
+    }
 }
