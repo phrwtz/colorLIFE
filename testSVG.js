@@ -1,6 +1,6 @@
 //global variables
 var board = [];
-var size = 8;
+var size = 6;
 var colorToSet;
 var runFlag = false;
 var cont = document.getElementById("container");
@@ -124,73 +124,73 @@ function setColorOnClick(id) {
         box = document.getElementById(id);
         boxColor = box.getAttribute("fill");
         //Do nothing if box is already either red or blue
-        if ((boxColor != "red") && (boxColor != "blue")) {
+        if (boxColor == "red" || boxColor == "blue") { } else {
             //If it's any other color, make it turnColor
             box.setAttribute("fill", turnColor);
-        }
-        //Now that we have the box colored, find squares
-        squares = findSquares(box);
-        //and fill them.
-        fillSquares(squares, turnColor);
-        //Find diamonds
-        diamonds = findDiamonds(box);
-        //and fill them.
-        fillDiamonds(diamonds, turnColor);
-        //Update the score
-        score();
-        //If this is the first move or the second turn by the same color, toggle turnColors
-        if ((turnNumber == 0) || (turnNumber == 2)) {
-            //If we're switching colors...
-            turnNumber = 1;
-            if (turnColor == "red") {
-                turnColor = "blue";
-            } else if (turnColor == "blue") {
-                turnColor = "red";
+            //Now that we have the box colored, find squares
+            squares = findSquares(box);
+            //and fill them.
+            fillSquares(squares, turnColor);
+            //Find diamonds
+            diamonds = findDiamonds(box);
+            //and fill them.
+            fillDiamonds(diamonds, turnColor);
+            //Update the score
+            score();
+            //If this is the first move or the second turn by the same color, toggle turnColors
+            if ((turnNumber == 0) || (turnNumber == 2)) {
+                //If we're switching colors...
+                turnNumber = 1;
+                if (turnColor == "red") {
+                    turnColor = "blue";
+                } else if (turnColor == "blue") {
+                    turnColor = "red";
+                }
+                colorRect.setAttribute("fill", turnColor)
+            } else {
+                turnNumber = 2;
             }
-            colorRect.setAttribute("fill", turnColor)
-        } else {
-            turnNumber = 2;
-        }
-        //Look to see if there are any more squares or diamonds
-        if (!(anySquaresLeft())) {
-            console.log("No squares left!");
-            handleNoMoreSquares();
+            //Look to see if there are any more squares or diamonds
+            if (!(anySquaresLeft())) {
+                console.log("No squares left!");
+                handleNoMoreSquares();
+            }
         }
     }
 }
 
-function fillSquares(squares, c) {
-    for (var i = 0; i < squares.length; i++) {
-        console.log("Squares = " + squares);
-        fillSquare(squares[i], c);
-    }
-}
-
-function score() {
-    var redCount = 0,
-        blueCount = 0,
-        lightRedCount = 0,
-        lightBlueCount = 0,
-        color;
-    countPara.innerHTML = "";
-    for (var x = 0; x < size; x++) {
-        for (var y = 0; y < size; y++) {
-            color = getColor(x, y);
-            switch (color) {
-                case "red":
-                    redCount++;
-                    break;
-                case "blue":
-                    blueCount++;
-                    break;
-                case "pink":
-                    lightRedCount++;
-                    break;
-                case "paleturquoise":
-                    lightBlueCount++;
-                    break;
-            }
+    function fillSquares(squares, c) {
+        for (var i = 0; i < squares.length; i++) {
+            console.log("Squares = " + squares);
+            fillSquare(squares[i], c);
         }
     }
-    countPara.innerHTML = ("<span style='color:red; font-size:24'>" + redCount + ", </span> <span style='color:blue; font-size:24'>" + blueCount + ", </span> <span style='color:hotpink; font-size:24'>" + lightRedCount + ", </span><span style='color:cornflowerblue; font-size:24'>" + lightBlueCount + "</span >");
-}
+
+    function score() {
+        var redCount = 0,
+            blueCount = 0,
+            lightRedCount = 0,
+            lightBlueCount = 0,
+            color;
+        countPara.innerHTML = "";
+        for (var x = 0; x < size; x++) {
+            for (var y = 0; y < size; y++) {
+                color = getColor(x, y);
+                switch (color) {
+                    case "red":
+                        redCount++;
+                        break;
+                    case "blue":
+                        blueCount++;
+                        break;
+                    case "pink":
+                        lightRedCount++;
+                        break;
+                    case "paleturquoise":
+                        lightBlueCount++;
+                        break;
+                }
+            }
+        }
+        countPara.innerHTML = ("<span style='color:red; font-size:24'>" + redCount + ", </span> <span style='color:blue; font-size:24'>" + blueCount + ", </span> <span style='color:hotpink; font-size:24'>" + lightRedCount + ", </span><span style='color:cornflowerblue; font-size:24'>" + lightBlueCount + "</span >");
+    }
