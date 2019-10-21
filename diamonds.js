@@ -39,7 +39,7 @@ function forwardMatches(x, y, thisColor) {
         if (thatColor) {
             if ((thatColor === thisColor) && (i != 0)) {
                 arr.push(i);
-  //              console.log("forward match found for square " + x + ", " + y + " at position " + i);
+                //              console.log("forward match found for square " + x + ", " + y + " at position " + i);
             }
         }
     }
@@ -54,7 +54,7 @@ function backwardMatches(x, y, thisColor) {
         if (thatColor) {
             if ((thatColor === thisColor) && (i != 0)) {
                 arr.push(i);
-   //             console.log("backward match found for square " + x + ", " + y + " at position " + i);
+                //             console.log("backward match found for square " + x + ", " + y + " at position " + i);
             }
         }
     }

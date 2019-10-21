@@ -9,15 +9,51 @@ var colorRect = document.getElementById("colorRect");
 var turnColor = "red",
     turnNumber = 0, //First time only gets one turn
     firstTurn = true,
-    squaresAvailable = true;
+    squaresAvailable = true,
+    controlKeyDown = false,
+    idCursorIsIn = "";
 centerColorRect();
 makeBoard();
+testKeyPress();
 countPara.innerHTML = ("<span style='color:red; font-size:24'>" + 0 + ", </span> <span style='color:blue; font-size:24'>" + 0 + ", </span> <span style='color:hotpink; font-size:24'>" + 0 + ", </span><span style='color:cornflowerblue; font-size:24'>" + 0 + "</span >");
 
 function centerColorRect() {
     var shift = 80 + (size * 20);
     colorRect.setAttribute("x", shift.toString());
     colorRect.setAttribute("fill", "red");
+}
+
+function testKeyPress() {
+    document.addEventListener('keydown', function (event) {
+        if (event.defaultPrevented) {
+            return;
+        }
+        var key = event.key || event.keyCode;
+        if (key === 'Control' || key === "Ctrl" || key === 17) {
+            controlKeyDown = true;
+     //       console.log("Control key is down.");
+            drawForwardLine(idCursorIsIn);
+            drawBackwardLine(idCursorIsIn);
+        }
+    })
+    document.addEventListener('keyup', function (event) {
+        if (event.defaultPrevented) {
+            return;
+        }
+        var key = event.key || event.keyCode;
+        if (key === 'Control' || key === "Ctrl" || key === 17) {
+            controlKeyDown = false;
+      //      console.log("Control key is up.");
+            removeLines();
+        }
+    })
+}
+
+function setCursorId(id) {
+    idCursorIsIn = id;
+ //   console.log(id);
+    drawForwardLine(id);
+    drawBackwardLine(id);
 }
 
 function makeBoard() {
@@ -37,8 +73,8 @@ function makeBoard() {
             myRect.setAttribute("fill", "white");
             myRect.setAttribute("id", i.toString() + "_" + j.toString());
             myRect.setAttribute("onclick", "setColorOnClick(this.getAttribute('id'))");
-            myRect.setAttribute("onmouseenter", "drawBackwardLine(this.getAttribute('id'));drawForwardLine(this.getAttribute('id'))");
-            myRect.setAttribute("onmouseleave", "removeLines()");
+            myRect.setAttribute("onmouseenter", "setCursorId(this.getAttribute('id'))");
+            myRect.setAttribute("onmouseleave", "removeLines();setCursorId('')");
             cont.appendChild(boardRect);
             cont.appendChild(myRect);
             board[i].push(myRect.id);
@@ -58,8 +94,8 @@ function removeLines() {
 }
 
 function drawForwardLine(id) {
-    if (event.ctrlKey) {
-        var box = document.getElementById(id);
+ //   console.log("In draw forward, control key down = " + controlKeyDown);
+    if ((controlKeyDown) && (idCursorIsIn != "")) {
         var x = parseInt(id.split("_")[0]);
         var y = parseInt(id.split("_")[1]);
         if (x + y < size) {
@@ -73,14 +109,13 @@ function drawForwardLine(id) {
             x2 = 100 + 40 * size;
             y2 = 140 + 40 * (y - (size - x));
         }
-        console.log("x= " + x + " y= " + y + " x1= " + x1 + " y1= " + y1 + " x2= " + x2 + " y2= " + y2);
+     //   console.log("x= " + x + " y= " + y + " x1= " + x1 + " y1= " + y1 + " x2= " + x2 + " y2= " + y2);
         drawLine(x1, y1, x2, y2, "forward");
     }
 }
 
 function drawBackwardLine(id) {
-    if (event.ctrlKey) {
-        var box = document.getElementById(id);
+    if ((controlKeyDown) && (idCursorIsIn != "")) {
         var x = parseInt(id.split("_")[0]);
         var y = parseInt(id.split("_")[1]);
         if (x > y) {
@@ -124,7 +159,7 @@ function setColorOnClick(id) {
         box = document.getElementById(id);
         boxColor = box.getAttribute("fill");
         //Do nothing if box is already either red or blue
-        if (boxColor == "red" || boxColor == "blue") { } else {
+        if (boxColor == "red" || boxColor == "blue") {} else {
             //If it's any other color, make it turnColor
             box.setAttribute("fill", turnColor);
             //Now that we have the box colored, find squares
@@ -152,45 +187,45 @@ function setColorOnClick(id) {
             }
             //Look to see if there are any more squares or diamonds
             if (!(anySquaresLeft())) {
-                console.log("No squares left!");
+          //      console.log("No squares left!");
                 handleNoMoreSquares();
             }
         }
     }
 }
 
-    function fillSquares(squares, c) {
-        for (var i = 0; i < squares.length; i++) {
-            console.log("Squares = " + squares);
-            fillSquare(squares[i], c);
-        }
+function fillSquares(squares, c) {
+    for (var i = 0; i < squares.length; i++) {
+  //      console.log("Squares = " + squares);
+        fillSquare(squares[i], c);
     }
+}
 
-    function score() {
-        var redCount = 0,
-            blueCount = 0,
-            lightRedCount = 0,
-            lightBlueCount = 0,
-            color;
-        countPara.innerHTML = "";
-        for (var x = 0; x < size; x++) {
-            for (var y = 0; y < size; y++) {
-                color = getColor(x, y);
-                switch (color) {
-                    case "red":
-                        redCount++;
-                        break;
-                    case "blue":
-                        blueCount++;
-                        break;
-                    case "pink":
-                        lightRedCount++;
-                        break;
-                    case "paleturquoise":
-                        lightBlueCount++;
-                        break;
-                }
+function score() {
+    var redCount = 0,
+        blueCount = 0,
+        lightRedCount = 0,
+        lightBlueCount = 0,
+        color;
+    countPara.innerHTML = "";
+    for (var x = 0; x < size; x++) {
+        for (var y = 0; y < size; y++) {
+            color = getColor(x, y);
+            switch (color) {
+                case "red":
+                    redCount++;
+                    break;
+                case "blue":
+                    blueCount++;
+                    break;
+                case "pink":
+                    lightRedCount++;
+                    break;
+                case "paleturquoise":
+                    lightBlueCount++;
+                    break;
             }
         }
-        countPara.innerHTML = ("<span style='color:red; font-size:24'>" + redCount + ", </span> <span style='color:blue; font-size:24'>" + blueCount + ", </span> <span style='color:hotpink; font-size:24'>" + lightRedCount + ", </span><span style='color:cornflowerblue; font-size:24'>" + lightBlueCount + "</span >");
     }
+    countPara.innerHTML = ("<span style='color:red; font-size:24'>" + redCount + ", </span> <span style='color:blue; font-size:24'>" + blueCount + ", </span> <span style='color:hotpink; font-size:24'>" + lightRedCount + ", </span><span style='color:cornflowerblue; font-size:24'>" + lightBlueCount + "</span >");
+}
