@@ -1,6 +1,6 @@
 //global variables
 var board = [];
-var size = 6;
+var size = 16;
 var colorToSet;
 var runFlag = false;
 var cont = document.getElementById("container");
@@ -10,7 +10,7 @@ var turnColor = "red",
     turnNumber = 0, //First time only gets one turn
     firstTurn = true,
     squaresAvailable = true,
-    controlKeyDown = false,
+    shiftKeyDown = false,
     idCursorIsIn = "";
 centerColorRect();
 makeBoard();
@@ -29,8 +29,8 @@ function testKeyPress() {
             return;
         }
         var key = event.key || event.keyCode;
-        if (key === 'Control' || key === "Ctrl" || key === 17) {
-            controlKeyDown = true;
+        if (key === 'Shift') {
+            shiftKeyDown = true;
      //       console.log("Control key is down.");
             drawForwardLine(idCursorIsIn);
             drawBackwardLine(idCursorIsIn);
@@ -41,8 +41,8 @@ function testKeyPress() {
             return;
         }
         var key = event.key || event.keyCode;
-        if (key === 'Control' || key === "Ctrl" || key === 17) {
-            controlKeyDown = false;
+        if (key === 'Shift') {
+            shiftKeyDown = false;
       //      console.log("Control key is up.");
             removeLines();
         }
@@ -94,8 +94,8 @@ function removeLines() {
 }
 
 function drawForwardLine(id) {
- //   console.log("In draw forward, control key down = " + controlKeyDown);
-    if ((controlKeyDown) && (idCursorIsIn != "")) {
+ //   console.log("In draw forward, control key down = " + shiftKeyDown);
+    if ((shiftKeyDown) && (idCursorIsIn != "")) {
         var x = parseInt(id.split("_")[0]);
         var y = parseInt(id.split("_")[1]);
         if (x + y < size) {
@@ -115,7 +115,7 @@ function drawForwardLine(id) {
 }
 
 function drawBackwardLine(id) {
-    if ((controlKeyDown) && (idCursorIsIn != "")) {
+    if ((shiftKeyDown) && (idCursorIsIn != "")) {
         var x = parseInt(id.split("_")[0]);
         var y = parseInt(id.split("_")[1]);
         if (x > y) {

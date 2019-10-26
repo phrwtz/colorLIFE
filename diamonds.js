@@ -72,15 +72,22 @@ function fillDiamonds(diamonds, color) {
             fColor,
             iColor,
             deltaX = 1,
-            id;
+            id,
+            boxToFill,
+            boxesToFill = [];
         for (var i = 1; i <= d; i++) {
             for (var j = -deltaX; j <= deltaX; j++) {
                 id = (x + j) + "_" + (y + i);
                 fBox = document.getElementById(id);
                 if (fBox) {
-                    iColor = fBox.getAttribute("fill")
-                    fColor = fillColor(color, iColor)
-                    fBox.setAttribute("fill", fColor);
+                    iColor = fBox.getAttribute("fill");
+                    fColor = targetColor(color, iColor);
+                    if (iColor != fColor) {
+                        boxToFill = new Object;
+                        boxToFill.box = fBox;
+                        boxToFill.tempColors = findIntermediateColors(iColor, fColor);
+                        boxesToFill.push(boxToFill);
+                    }
                 }
             }
             deltaX++;
@@ -92,13 +99,20 @@ function fillDiamonds(diamonds, color) {
                 fBox = document.getElementById(id);
                 if (fBox) {
                     iColor = fBox.getAttribute("fill")
-                    fColor = fillColor(color, iColor)
-                    fBox.setAttribute("fill", fColor);
+                    fColor = targetColor(color, iColor)
+                    if (iColor != fColor) {
+                        boxToFill = new Object;
+                        boxToFill.box = fBox;
+                        boxToFill.tempColors = findIntermediateColors(iColor, fColor);
+                        boxesToFill.push(boxToFill);
+                    }
                 }
             }
             deltaX--;
         }
+        changeColors(boxesToFill);
     }
+}
 
     //Return the top box of the diamond
     function findTop(diamond) {
@@ -161,52 +175,3 @@ function fillDiamonds(diamonds, color) {
         console.log("Diamond corners found. xmin = " + xmin + " ymin = " + ymin + "xmax = " + xmax + " ymax = " + ymax);
         return [xmin, xmax, ymin, ymax];
     }
-
-    function fillInnerSquare(fillCorners, color) {
-        var xmin = fillCorners[0],
-            xmax = fillCorners[1],
-            ymin = fillCorners[2],
-            ymax = fillCorners[3],
-            id, box;
-        for (var i = xmin + 1; i < xmax; i++) {
-            for (var j = ymin + 1; j < ymax; j++) {
-                id = i + "_" + j;
-                box = document.getElementById(id);
-                box.setAttribute("fill", color);
-            }
-        }
-    }
-
-    function fillOuterColumns(fillCorners, color) {
-        var xmin = fillCorners[0],
-            xmax = fillCorners[1],
-            ymin = fillCorners[2],
-            ymax = fillCorners[3],
-            id, box;
-        for (var i = ymin + 1; i <= ymax - 1; i++) {
-            id = xmin + "_" + i;
-            box = document.getElementById(id);
-            box.setAttribute("fill", color);
-            id = xmax + "_" + i;
-            box = document.getElementById(id);
-            box.setAttribute("fill", color);
-        }
-    }
-
-    function fillOuterRows(fillCorners, color) {
-        var xmin = fillCorners[0],
-            xmax = fillCorners[1],
-            ymin = fillCorners[2],
-            ymax = fillCorners[3],
-            id, box;
-        for (var i = xmin + 1; i <= xmax - 1; i++) {
-            id = i + "_" + ymin;
-            box = document.getElementById(id);
-            box.setAttribute("fill", color);
-            id = i + "_" + ymax;
-            box = document.getElementById(id);
-            box.setAttribute("fill", color);
-        }
-    }
-}
-

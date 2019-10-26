@@ -1,6 +1,3 @@
-
-
-
 function setWhite() {
     colorToSet = "white";
     redRect.setAttribute("fill", "pink");
@@ -53,6 +50,51 @@ function fillDiamonds(diamonds, color) {
         fillOuterColumns(fillCorners, cornerColor);
         fillInnerSquare(fillCorners, cornerColor);
     }
+}
 
-    
+function fillInnerSquare(fillCorners, color) {
+    var xmin = fillCorners[0],
+        xmax = fillCorners[1],
+        ymin = fillCorners[2],
+        ymax = fillCorners[3],
+        id, box;
+    for (var i = xmin + 1; i < xmax; i++) {
+        for (var j = ymin + 1; j < ymax; j++) {
+            id = i + "_" + j;
+            box = document.getElementById(id);
+            box.setAttribute("fill", color);
+        }
+    }
+}
+
+function fillOuterColumns(fillCorners, color) {
+    var xmin = fillCorners[0],
+        xmax = fillCorners[1],
+        ymin = fillCorners[2],
+        ymax = fillCorners[3],
+        id, box;
+    for (var i = ymin + 1; i <= ymax - 1; i++) {
+        id = xmin + "_" + i;
+        box = document.getElementById(id);
+        box.setAttribute("fill", color);
+        id = xmax + "_" + i;
+        box = document.getElementById(id);
+        box.setAttribute("fill", color);
+    }
+}
+
+function fillOuterRows(fillCorners, color) {
+    var xmin = fillCorners[0],
+        xmax = fillCorners[1],
+        ymin = fillCorners[2],
+        ymax = fillCorners[3],
+        id, box;
+    for (var i = xmin + 1; i <= xmax - 1; i++) {
+        id = i + "_" + ymin;
+        box = document.getElementById(id);
+        box.setAttribute("fill", color);
+        id = i + "_" + ymax;
+        box = document.getElementById(id);
+        box.setAttribute("fill", color);
+    }
 }

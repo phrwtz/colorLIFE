@@ -29,33 +29,63 @@ function cornersMatch(x, y, dxArray, dyArray) {
     return squares;
 }
 
-function fillSquare(square, color) {
+//Convert a color name (string) to an array of RGB values
+function getRGB(color) {
+    switch (color) {
+        case 'red':
+            return [255, 0, 0];
+        case 'blue':
+            return [0, 0, 255];
+        case 'pink':
+            return [255, 192, 203];
+        case 'paleturquoise':
+            return [175, 238, 238];
+        case 'white':
+            return [255, 255, 255];
+    }
+    return null;
+}
+
+//Given a square and the corner color of the square, find all the interior boxes to fill and give each an array of 10 colors from the start color to the end color. Don't actually fill the boxes so that we can fill then all at once, once the colors have been computed.
+function fillSquare(square, thisColor) {
     var x = square[0],
         y = square[1],
         dx = square[2],
         dy = square[3],
         myBox,
-        insideColor;
+        boxesToFill = [],
+        startColor,
+        endColor;
     (dx > 0 ? sgnX = 1 : sgnX = -1);
     (dy > 0 ? sgnY = 1 : sgnY = -1);
     for (var i = 0; i < sgnX * dx + 1; i++) {
         for (var j = 0; j < sgnY * dy + 1; j++) {
             if (!corner(i, j, dx, dy)) {
                 myBox = getBox(x + sgnX * i, y + sgnY * j);
-                insideColor = myBox.getAttribute("fill");
-                myBox.setAttribute("fill", fillColor(color, insideColor));
+                startColor = myBox.getAttribute("fill");
+                endColor = targetColor(thisColor, startColor);
+                if (endColor != startColor) {
+                    boxToFill = new Object;
+                    boxToFill.box = myBox;
+                    boxToFill.startColor = startColor;
+                    boxToFill.endColor = endColor;
+                    boxToFill.tempColors = findIntermediateColors(startColor, endColor);
+                    boxesToFill.push(boxToFill);
+                }
             }
         }
     }
+    changeColors(boxesToFill);
 }
+
 
 function corner(i, j, dx, dy) {
     return ((i == 0 && j == 0) || (i == Math.abs(dx) && j == 0) || (i == 0 && j == Math.abs(dy)) || (i == Math.abs(dx) && j == Math.abs(dy)))
 }
 
-function fillColor(cornerColor, insideColor) {
+function targetColor(cornerColor, startColor) {
     if (cornerColor === "red") {
-        switch (insideColor) {
+        switch (startColor) {
             case "blue":
                 return "blue";
                 break;
@@ -74,7 +104,7 @@ function fillColor(cornerColor, insideColor) {
         }
     }
     if (cornerColor === "blue") {
-        switch (insideColor) {
+        switch (startColor) {
             case "blue":
                 return "blue";
                 break;
