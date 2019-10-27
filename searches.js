@@ -213,7 +213,7 @@ function checkAllSquares(x, y) {
         }
         //Check the eight possible squares, one by one
         if (checkOneSquare(x, y, thisColor, thatColor, upColor, rightColor, upRightColor)) {
-            console.log("up right square found at " + x + ", " + y + ", i = " + i);
+   //         console.log("up right square found at " + x + ", " + y + ", i = " + i);
             return true;
         }
         if (checkOneSquare(x, y, thisColor, thatColor, upColor, leftColor, upLeftColor)) {
@@ -221,11 +221,11 @@ function checkAllSquares(x, y) {
             return true;
         }
         if (checkOneSquare(x, y, thisColor, thatColor, downColor, rightColor, downRightColor)) {
-            console.log("down right square found at " + x + ", " + y + ", i = " + i);
+    //        console.log("down right square found at " + x + ", " + y + ", i = " + i);
             return true;
         };
         if (checkOneSquare(x, y, thisColor, thatColor, downColor, leftColor, downLeftColor)) {
-            console.log("down left square found at " + x + ", " + y + ", i = " + i);
+     //       console.log("down left square found at " + x + ", " + y + ", i = " + i);
             return true;
         }
     }

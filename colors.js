@@ -35,13 +35,16 @@ function changeColors(boxes) {
     function paint() {
         if (i >= 100) {
             clearInterval(int);
+            //Update the score
+            score();
+            handleSomeoneWins;
         } else {
             for (let j = 0; j < boxes.length; j++) {
                 boxToFill = boxes[j];
                 box = boxToFill.box;
                 color = boxToFill.tempColors[i];
                 box.setAttribute("fill", color);
-                console.log(color);
+     //           console.log(color);
             }
             i++
         }

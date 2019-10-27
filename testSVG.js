@@ -1,6 +1,6 @@
 //global variables
 var board = [];
-var size = 16;
+var size = 6;
 var colorToSet;
 var runFlag = false;
 var cont = document.getElementById("container");
@@ -163,6 +163,9 @@ function setColorOnClick(id) {
         if (boxColor == "red" || boxColor == "blue") {} else {
             //If it's any other color, make it turnColor
             box.setAttribute("fill", turnColor);
+            //Update the score
+            score();
+            handleSomeoneWins;
             //Now that we have the box colored, find squares
             squares = findSquares(box);
             //and fill them.
@@ -171,8 +174,6 @@ function setColorOnClick(id) {
             diamonds = findDiamonds(box);
             //and fill them.
             fillDiamonds(diamonds, turnColor);
-            //Update the score
-            score();
             //If this is the first move or the second turn by the same color, toggle turnColors
             if ((turnNumber == 0) || (turnNumber == 2)) {
                 //If we're switching colors...
@@ -229,6 +230,10 @@ function score() {
         }
     }
     countPara.innerHTML = ("<span style='color:red; font-size:24'>" + redCount + ", </span> <span style='color:blue; font-size:24'>" + blueCount + ", </span> <span style='color:hotpink; font-size:24'>" + lightRedCount + ", </span><span style='color:cornflowerblue; font-size:24'>" + lightBlueCount + "</span >");
+    handleSomeoneWins(redCount, blueCount);
+}
+
+function handleSomeoneWins(redCount, blueCount) {
     if (redCount > size * size / 2) {
         countPara.innerHTML += "<br><span style='font-size:32;color:red'> Red wins! </span>";
         someoneWins = true;

@@ -45,7 +45,7 @@ function fillDiamonds(diamonds, color) {
             fillCorners;
         pos = findPos(df, db);
         fillCorners = findDiamondFillCorners(x, y, delta, pos);
-        console.log("xmin = " + fillCorners[0] + ",   xmax = " + fillCorners[1] + ", ymin = " + fillCorners[2] + ", ymax = " + fillCorners[3]);
+  //      console.log("xmin = " + fillCorners[0] + ",   xmax = " + fillCorners[1] + ", ymin = " + fillCorners[2] + ", ymax = " + fillCorners[3]);
         fillOuterRows(fillCorners, cornerColor);
         fillOuterColumns(fillCorners, cornerColor);
         fillInnerSquare(fillCorners, cornerColor);

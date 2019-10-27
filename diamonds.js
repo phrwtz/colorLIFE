@@ -141,37 +141,4 @@ function fillDiamonds(diamonds, color) {
         }
     }
 
-    function findDiamondFillCorners(x, y, delta, pos) {
-        var xmin,
-            xmax,
-            ymin,
-            ymax
-        switch (pos) {
-            case "top":
-                xmin = x - delta + 1;
-                xmax = x + delta - 1;
-                ymin = y + 1;
-                ymax = y + 2 * delta - 1;
-                break;
-            case "bottom":
-                xmin = x - delta + 1;
-                xmax = x + delta - 1;
-                ymin = y - 2 * delta - 1;
-                ymax = y - 1;
-                break;
-            case "left":
-                xmin = x + 1;
-                xmax = x + 2 * delta - 1;
-                ymin = y - delta + 1;
-                ymax = y + delta - 1;
-                break;
-            case "right":
-                xmin = x - 2 * delta + 1;
-                xmax = x - 1;
-                ymin = y - delta + 1;
-                ymax = y + delta - 1;
-                break;
-        }
-        console.log("Diamond corners found. xmin = " + xmin + " ymin = " + ymin + "xmax = " + xmax + " ymax = " + ymax);
-        return [xmin, xmax, ymin, ymax];
-    }
+    
