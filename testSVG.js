@@ -1,11 +1,12 @@
 //global variables
 var board = [];
-var size = 6;
+var size = 12;
 var colorToSet;
 var runFlag = false;
 var cont = document.getElementById("container");
 var boardRect = document.getElementById("boardRect");
-var colorRect = document.getElementById("colorRect");
+var colorRect1 = document.getElementById("colorRect1");
+var colorRect2 = document.getElementById("colorRect2");
 var turnColor = "red",
     turnNumber = 0, //First time only gets one turn
     firstTurn = true,
@@ -19,9 +20,12 @@ testKeyPress();
 countPara.innerHTML = ("<span style='color:red; font-size:24'>" + 0 + ", </span> <span style='color:blue; font-size:24'>" + 0 + ", </span> <span style='color:hotpink; font-size:24'>" + 0 + ", </span><span style='color:cornflowerblue; font-size:24'>" + 0 + "</span >");
 
 function centerColorRect() {
-    var shift = 80 + (size * 20);
-    colorRect.setAttribute("x", shift.toString());
-    colorRect.setAttribute("fill", "red");
+    var shift1 = 60 + (size * 20),
+        shift2 = 60 + (size * 24);
+    colorRect1.setAttribute("x", shift1.toString());
+    colorRect2.setAttribute("x", shift2.toString());
+    colorRect1.setAttribute("fill", "red");
+    colorRect2.setAttribute("fill", "white");
 }
 
 function testKeyPress() {
@@ -183,9 +187,11 @@ function setColorOnClick(id) {
                 } else if (turnColor == "blue") {
                     turnColor = "red";
                 }
-                colorRect.setAttribute("fill", turnColor)
+                colorRect1.setAttribute("fill", turnColor);
+                colorRect2.setAttribute("fill", "white");
             } else {
                 turnNumber = 2;
+                colorRect2.setAttribute("fill", turnColor);
             }
             //Look to see if there are any more squares or diamonds
             if (!(anySquaresLeft())) {
