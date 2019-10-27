@@ -10,6 +10,7 @@ var turnColor = "red",
     turnNumber = 0, //First time only gets one turn
     firstTurn = true,
     squaresAvailable = true,
+    someoneWins,
     shiftKeyDown = false,
     idCursorIsIn = "";
 centerColorRect();
@@ -152,7 +153,7 @@ function drawLine(x1, y1, x2, y2, id) {
 }
 
 function setColorOnClick(id) {
-    if (squaresAvailable) {
+    if (squaresAvailable && !someoneWins) {
         var boxColor,
             squares,
             diamonds;
@@ -230,7 +231,9 @@ function score() {
     countPara.innerHTML = ("<span style='color:red; font-size:24'>" + redCount + ", </span> <span style='color:blue; font-size:24'>" + blueCount + ", </span> <span style='color:hotpink; font-size:24'>" + lightRedCount + ", </span><span style='color:cornflowerblue; font-size:24'>" + lightBlueCount + "</span >");
     if (redCount > size * size / 2) {
         countPara.innerHTML += "<br><span style='font-size:32;color:red'> Red wins! </span>";
+        someoneWins = true;
     } else if (blueCount > size * size / 2) {
         countPara.innerHTML += "<br><span style='font-size:32;color:blue'> Blue wins! </span>";
+        someoneWins = true;
     }
 }
