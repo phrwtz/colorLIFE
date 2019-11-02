@@ -216,13 +216,6 @@ function setColorOnClick(id) {
     }
 }
 
-function fillSquares(squares, c) {
-    for (var i = 0; i < squares.length; i++) {
-  //      console.log("Squares = " + squares);
-        fillSquare(squares[i], c);
-    }
-}
-
 function score() {
     var redCount = 0,
         blueCount = 0,

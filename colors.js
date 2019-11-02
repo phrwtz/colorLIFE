@@ -31,7 +31,7 @@ function changeColors(boxes) {
     var boxToFill,
         box,
         color;
-    var int = setInterval(paint, 10);
+    var int = setInterval(paint, 15);
     function paint() {
         if (i >= 100) {
             clearInterval(int);
@@ -44,7 +44,6 @@ function changeColors(boxes) {
                 box = boxToFill.box;
                 color = boxToFill.tempColors[i];
                 box.setAttribute("fill", color);
-     //           console.log(color);
             }
             i++
         }
