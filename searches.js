@@ -42,6 +42,8 @@ function getRGB(color) {
             return [175, 238, 238];
         case 'white':
             return [255, 255, 255];
+        case 'wheat':
+            return [245, 222, 179];
     }
     return null;
 }
@@ -98,6 +100,9 @@ function targetColor(cornerColor, startColor) {
             case "white":
                 return "pink";
                 break;
+            case "wheat":
+                return "pink";
+                break;
             case "paleturquoise":
                 return "pink";
                 break;
@@ -115,6 +120,9 @@ function targetColor(cornerColor, startColor) {
                 return "paleturquoise";
                 break;
             case "white":
+                return "paleturquoise";
+                break;
+            case "wheat":
                 return "paleturquoise";
                 break;
             case "paleturquoise":
@@ -213,7 +221,7 @@ function checkAllSquares(x, y) {
         }
         //Check the eight possible squares, one by one
         if (checkOneSquare(x, y, thisColor, thatColor, upColor, rightColor, upRightColor)) {
-   //         console.log("up right square found at " + x + ", " + y + ", i = " + i);
+            //         console.log("up right square found at " + x + ", " + y + ", i = " + i);
             return true;
         }
         if (checkOneSquare(x, y, thisColor, thatColor, upColor, leftColor, upLeftColor)) {
@@ -221,11 +229,11 @@ function checkAllSquares(x, y) {
             return true;
         }
         if (checkOneSquare(x, y, thisColor, thatColor, downColor, rightColor, downRightColor)) {
-    //        console.log("down right square found at " + x + ", " + y + ", i = " + i);
+            //        console.log("down right square found at " + x + ", " + y + ", i = " + i);
             return true;
         };
         if (checkOneSquare(x, y, thisColor, thatColor, downColor, leftColor, downLeftColor)) {
-     //       console.log("down left square found at " + x + ", " + y + ", i = " + i);
+            //       console.log("down left square found at " + x + ", " + y + ", i = " + i);
             return true;
         }
     }

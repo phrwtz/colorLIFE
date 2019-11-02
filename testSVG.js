@@ -62,7 +62,8 @@ function setCursorId(id) {
 }
 
 function makeBoard() {
-    var row = [];
+    var row = [],
+        fillColor;
     for (var i = 0; i < size; i++) {
         var iStr = (100 + 40 * i).toString();
         board[i] = [];
@@ -75,8 +76,9 @@ function makeBoard() {
             myRect.setAttribute("y", jStr);
             myRect.setAttribute("stroke", "black");
             myRect.setAttribute("stroke-width", "2");
-            myRect.setAttribute("fill", "white");
             myRect.setAttribute("id", i.toString() + "_" + j.toString());
+            fillColor = getBoardFillColor(myRect);
+            myRect.setAttribute("fill", fillColor);
             myRect.setAttribute("onclick", "setColorOnClick(this.getAttribute('id'))");
             myRect.setAttribute("onmouseenter", "setCursorId(this.getAttribute('id'))");
             myRect.setAttribute("onmouseleave", "removeLines();setCursorId('')");
@@ -84,6 +86,18 @@ function makeBoard() {
             cont.appendChild(myRect);
             board[i].push(myRect.id);
         }
+    }
+}
+
+function getBoardFillColor(myRect) {
+    var x = parseInt(myRect.id.split("_")[0]),
+        y = parseInt(myRect.id.split("_")[1]);
+    if (x + y == 0) {
+        return "white";
+    } else if ((x + y) % 2 == 0) {
+        return "white";
+    } else {
+        return "wheat";
     }
 }
 
