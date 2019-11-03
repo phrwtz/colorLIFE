@@ -21,7 +21,7 @@ countPara.innerHTML = ("<span style='color:red; font-size:24'>" + 0 + ", </span>
 
 function centerColorRect() {
     var shift1 = 60 + (size * 20),
-        shift2 = 60 + (size * 24);
+        shift2 = 60 + (size * 26);
     colorRect1.setAttribute("x", shift1.toString());
     colorRect2.setAttribute("x", shift2.toString());
     colorRect1.setAttribute("fill", "red");

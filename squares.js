@@ -1,13 +1,14 @@
 function fillSquares(squares, c) {
-    for (var i = 0; i < squares.length; i++) {
-        //      console.log("Squares = " + squares);
-        highlightCorners(squares[i], c);
-        fillSquare(squares[i], c);
+    var square;
+    for (let i = 0; i < squares.length; i++) {
+        square = squares[i];
+        var corners = getSquareCorners(square);
+        highlightCorners(corners);
+        fillSquare(square);
     }
 }
 
-function highlightCorners(square, c) {
-    var corners = getSquareCorners(square);
+function highlightCorners(corners) {
     for (let j = 0; j < corners.length; j++) {
         corners[j].setAttribute("stroke-width", 5);
         corners[j].setAttribute("stroke", "gold");
@@ -17,7 +18,7 @@ function highlightCorners(square, c) {
             corners[j].setAttribute("stroke-width", 2);
             corners[j].setAttribute("stroke", "black");
         }
-    }, 2000);
+    }, 2500);
 }
 
 function getSquareCorners(square) {
@@ -25,8 +26,8 @@ function getSquareCorners(square) {
         y = square[1],
         dx = square[2],
         dy = square[3],
-        id0 = x.toString() + "_" + y.toString();
-    id1 = x.toString() + "_" + (y + dy).toString(),
+        id0 = x.toString() + "_" + y.toString(),
+        id1 = x.toString() + "_" + (y + dy).toString(),
         id2 = (x + dx).toString() + "_" + (y + dy).toString(),
         id3 = (x + dx).toString() + "_" + y.toString(),
         box0 = document.getElementById(id0),
@@ -66,15 +67,21 @@ function cornersMatch(x, y, dxArray, dyArray) {
     return squares;
 }
 //Given a square and the corner color of the square, find all the interior boxes to fill and give each an array of 10 colors from the start color to the end color. Don't actually fill the boxes so that we can fill then all at once, once the colors have been computed.
-function fillSquare(square, thisColor) {
+function fillSquare(square) {
     var x = square[0],
         y = square[1],
         dx = square[2],
         dy = square[3],
         myBox,
         boxesToFill = [],
+        cornerId,
+        cornerBox,
+        cornerColor,
         startColor,
         endColor;
+    cornerId = x.toString() + "_" + y.toString();
+    cornerBox = document.getElementById(cornerId);
+    cornerColor = cornerBox.getAttribute("fill");
     (dx > 0 ? sgnX = 1 : sgnX = -1);
     (dy > 0 ? sgnY = 1 : sgnY = -1);
     for (var i = 0; i < sgnX * dx + 1; i++) {
@@ -82,7 +89,7 @@ function fillSquare(square, thisColor) {
             if (!corner(i, j, dx, dy)) {
                 myBox = getBox(x + sgnX * i, y + sgnY * j);
                 startColor = myBox.getAttribute("fill");
-                endColor = targetColor(thisColor, startColor);
+                endColor = targetColor(cornerColor, startColor);
                 if (endColor != startColor) {
                     boxToFill = new Object;
                     boxToFill.box = myBox;

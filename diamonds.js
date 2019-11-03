@@ -61,13 +61,30 @@ function backwardMatches(x, y, thisColor) {
     return arr;
 }
 
+function getDiamondCorners(x, y, d) {
+
+    id0 = x.toString() + "_" + y.toString(),
+        id1 = (x - d).toString() + "_" + (y + d).toString(),
+        id2 = (x + d).toString() + "_" + (y + d).toString(),
+        id3 = x.toString() + "_" + (y + 2 * d).toString(),
+        topBox = document.getElementById(id0),
+        leftBox = document.getElementById(id1),
+        rightBox = document.getElementById(id2),
+        bottomBox = document.getElementById(id3);
+    return [topBox, leftBox, rightBox, bottomBox];
+}
+
 function fillDiamonds(diamonds, color) {
-    for (var index = 0; index < diamonds.length; index++) {
-        var diamond = diamonds[index];
-        var d = Math.abs(diamond[3]);
+    var diamond,
+        corners;
+    for (let i = 0; i < diamonds.length; i++) {
+        diamond = diamonds[i];
         var topBox = findTop(diamond);
+        var d = Math.abs(diamond[3]);
         var x = parseInt(topBox.id.split("_")[0]);
         var y = parseInt(topBox.id.split("_")[1]);
+        corners = getDiamondCorners(x, y, d);
+        highlightCorners(corners);
         var fBox,
             fColor,
             iColor,
@@ -75,8 +92,8 @@ function fillDiamonds(diamonds, color) {
             id,
             boxToFill,
             boxesToFill = [];
-        for (var i = 1; i <= d; i++) {
-            for (var j = -deltaX; j <= deltaX; j++) {
+        for (let i = 1; i <= d; i++) {
+            for (let j = -deltaX; j <= deltaX; j++) {
                 id = (x + j) + "_" + (y + i);
                 fBox = document.getElementById(id);
                 if (fBox) {
@@ -114,31 +131,29 @@ function fillDiamonds(diamonds, color) {
     }
 }
 
-    //Return the top box of the diamond
-    function findTop(diamond) {
-        var x = diamond[0],
-            y = diamond[1],
-            df = diamond[2],
-            db = diamond[3];
-        var pos, id, d;
-        d = Math.abs(df);
-        if (df > 0 && db > 0) {
-            pos = "left";
-            id = (x + d) + "_" + (y - d);
-            return document.getElementById(id);
-        } else if (df > 0 && db < 0) {
-            pos = "bottom";
-            id = x + "_" + (y - 2 * d);
-            return document.getElementById(id);
-        } else if (df < 0 && db > 0) {
-            pos = "top";
-            id = x + "_" + y;
-            return document.getElementById(id);
-        } else if (df < 0 && db < 0) {
-            pos = "right";
-            id = (x - d) + "_" + (y - d);
-            return document.getElementById(id);
-        }
+//Return the top box of the diamond
+function findTop(diamond) {
+    var x = diamond[0],
+        y = diamond[1],
+        df = diamond[2],
+        db = diamond[3];
+    var pos, id, d;
+    d = Math.abs(df);
+    if (df > 0 && db > 0) {
+        pos = "left";
+        id = (x + d) + "_" + (y - d);
+        return document.getElementById(id);
+    } else if (df > 0 && db < 0) {
+        pos = "bottom";
+        id = x + "_" + (y - 2 * d);
+        return document.getElementById(id);
+    } else if (df < 0 && db > 0) {
+        pos = "top";
+        id = x + "_" + y;
+        return document.getElementById(id);
+    } else if (df < 0 && db < 0) {
+        pos = "right";
+        id = (x - d) + "_" + (y - d);
+        return document.getElementById(id);
     }
-
-    
+}
