@@ -1,24 +1,25 @@
-function fillSquares(squares, c) {
+function fillSquares(s, c) {
     var square;
-    for (let i = 0; i < squares.length; i++) {
-        square = squares[i];
+    for (let i = 0; i < s.length; i++) {
+        square = s[i];
         var corners = getSquareCorners(square);
-        highlightCorners(corners);
+        toggleCorners(corners);
         fillSquare(square);
     }
 }
 
-function highlightCorners(corners) {
+function toggleCorners(corners) {
     for (let j = 0; j < corners.length; j++) {
-        corners[j].setAttribute("stroke-width", 5);
+        corners[j].setAttribute("stroke-width", 6);
         corners[j].setAttribute("stroke", "gold");
     }
-    setTimeout(function () {
-        for (let j = 0; j < corners.length; j++) {
-            corners[j].setAttribute("stroke-width", 2);
-            corners[j].setAttribute("stroke", "black");
-        }
-    }, 2500);
+    setTimeout(
+        function () {
+            for (let j = 0; j < corners.length; j++) {
+                corners[j].setAttribute("stroke-width", 2);
+                corners[j].setAttribute("stroke", "black");
+            }
+        }, 2000);
 }
 
 function getSquareCorners(square) {

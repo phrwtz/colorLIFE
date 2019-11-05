@@ -36,7 +36,7 @@ function testKeyPress() {
         var key = event.key || event.keyCode;
         if (key === 'Shift') {
             shiftKeyDown = true;
-     //       console.log("Control key is down.");
+            //       console.log("Control key is down.");
             drawForwardLine(idCursorIsIn);
             drawBackwardLine(idCursorIsIn);
         }
@@ -48,7 +48,7 @@ function testKeyPress() {
         var key = event.key || event.keyCode;
         if (key === 'Shift') {
             shiftKeyDown = false;
-      //      console.log("Control key is up.");
+            //      console.log("Control key is up.");
             removeLines();
         }
     })
@@ -56,7 +56,7 @@ function testKeyPress() {
 
 function setCursorId(id) {
     idCursorIsIn = id;
- //   console.log(id);
+    //   console.log(id);
     drawForwardLine(id);
     drawBackwardLine(id);
 }
@@ -113,7 +113,7 @@ function removeLines() {
 }
 
 function drawForwardLine(id) {
- //   console.log("In draw forward, control key down = " + shiftKeyDown);
+    //   console.log("In draw forward, control key down = " + shiftKeyDown);
     if ((shiftKeyDown) && (idCursorIsIn != "")) {
         var x = parseInt(id.split("_")[0]);
         var y = parseInt(id.split("_")[1]);
@@ -128,7 +128,7 @@ function drawForwardLine(id) {
             x2 = 100 + 40 * size;
             y2 = 140 + 40 * (y - (size - x));
         }
-     //   console.log("x= " + x + " y= " + y + " x1= " + x1 + " y1= " + y1 + " x2= " + x2 + " y2= " + y2);
+        //   console.log("x= " + x + " y= " + y + " x1= " + x1 + " y1= " + y1 + " x2= " + x2 + " y2= " + y2);
         drawLine(x1, y1, x2, y2, "forward");
     }
 }
@@ -178,7 +178,7 @@ function setColorOnClick(id) {
         box = document.getElementById(id);
         boxColor = box.getAttribute("fill");
         //Do nothing if box is already either red or blue
-        if (boxColor == "red" || boxColor == "blue") {} else {
+        if (boxColor == "red" || boxColor == "blue") { } else {
             //If it's any other color, make it turnColor
             box.setAttribute("fill", turnColor);
             //Update the score
@@ -186,12 +186,8 @@ function setColorOnClick(id) {
             handleSomeoneWins;
             //Now that we have the box colored, find squares
             squares = findSquares(box);
-            //and fill them.
-            fillSquares(squares, turnColor);
-            //Find diamonds
             diamonds = findDiamonds(box);
-            //and fill them.
-            fillDiamonds(diamonds, turnColor);
+            fillAll(squares, diamonds, turnColor);
             //If this is the first move or the second turn by the same color, toggle turnColors
             if ((turnNumber == 0) || (turnNumber == 2)) {
                 //If we're switching colors...
@@ -209,11 +205,19 @@ function setColorOnClick(id) {
             }
             //Look to see if there are any more squares or diamonds
             if (!(anySquaresLeft())) {
-          //      console.log("No squares left!");
+                //      console.log("No squares left!");
                 handleNoMoreSquares();
             }
         }
     }
+}
+
+async function fillAll(s, d, c) {
+    console.log("starting to fill squares");
+    const x = await fillSquares(s, c);
+    console.log("squares filled. Starting on diamonds");
+    fillDiamonds(d, c);
+    console.log("diamonds filled");
 }
 
 function score() {

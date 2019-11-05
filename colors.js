@@ -24,7 +24,7 @@ function findIntermediateColors(startColor, endColor) {
     return null;
 }
 
-//Given an array of boxes to fill, with the range of colors from startColor to fillColor (where the color actually changes),fill all the boxes with each color in the range.
+//Given an array of boxes to fill, with the range of colors from startColor to fillColor (where the color actually changes),fill all the boxes with each color in the range. Wait in between each color change so that the process is apparent to the user.
 
 function changeColors(boxes) {
     var i = 1;

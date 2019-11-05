@@ -63,72 +63,85 @@ function backwardMatches(x, y, thisColor) {
 
 function getDiamondCorners(x, y, d) {
 
-    id0 = x.toString() + "_" + y.toString(),
-        id1 = (x - d).toString() + "_" + (y + d).toString(),
-        id2 = (x + d).toString() + "_" + (y + d).toString(),
-        id3 = x.toString() + "_" + (y + 2 * d).toString(),
-        topBox = document.getElementById(id0),
-        leftBox = document.getElementById(id1),
-        rightBox = document.getElementById(id2),
-        bottomBox = document.getElementById(id3);
-    return [topBox, leftBox, rightBox, bottomBox];
+
 }
 
-function fillDiamonds(diamonds, color) {
+function fillDiamonds(diamonds, c) {
     var diamond,
         corners;
     for (let i = 0; i < diamonds.length; i++) {
         diamond = diamonds[i];
+        var corners = getDiamondCorners(diamond);
+        cornerColor = corners[0].getAttribute("fill");
+        toggleCorners(corners);
+        fillDiamond(diamond, cornerColor);
+    }
+
+    function getDiamondCorners(diamond) {
         var topBox = findTop(diamond);
         var d = Math.abs(diamond[3]);
         var x = parseInt(topBox.id.split("_")[0]);
         var y = parseInt(topBox.id.split("_")[1]);
-        corners = getDiamondCorners(x, y, d);
-        highlightCorners(corners);
-        var fBox,
-            fColor,
-            iColor,
-            deltaX = 1,
-            id,
-            boxToFill,
-            boxesToFill = [];
-        for (let i = 1; i <= d; i++) {
-            for (let j = -deltaX; j <= deltaX; j++) {
-                id = (x + j) + "_" + (y + i);
-                fBox = document.getElementById(id);
-                if (fBox) {
-                    iColor = fBox.getAttribute("fill");
-                    fColor = targetColor(color, iColor);
-                    if (iColor != fColor) {
-                        boxToFill = new Object;
-                        boxToFill.box = fBox;
-                        boxToFill.tempColors = findIntermediateColors(iColor, fColor);
-                        boxesToFill.push(boxToFill);
-                    }
-                }
-            }
-            deltaX++;
-        }
-        deltaX = d - 1;
-        for (i = d + 1; i < 2 * d; i++) {
-            for (var j = -deltaX; j <= deltaX; j++) {
-                id = (x + j) + "_" + (y + i);
-                fBox = document.getElementById(id);
-                if (fBox) {
-                    iColor = fBox.getAttribute("fill")
-                    fColor = targetColor(color, iColor)
-                    if (iColor != fColor) {
-                        boxToFill = new Object;
-                        boxToFill.box = fBox;
-                        boxToFill.tempColors = findIntermediateColors(iColor, fColor);
-                        boxesToFill.push(boxToFill);
-                    }
-                }
-            }
-            deltaX--;
-        }
-        changeColors(boxesToFill);
+        id0 = x.toString() + "_" + y.toString(),
+            id1 = (x - d).toString() + "_" + (y + d).toString(),
+            id2 = (x + d).toString() + "_" + (y + d).toString(),
+            id3 = x.toString() + "_" + (y + 2 * d).toString(),
+            topBox = document.getElementById(id0),
+            leftBox = document.getElementById(id1),
+            rightBox = document.getElementById(id2),
+            bottomBox = document.getElementById(id3);
+        return [topBox, leftBox, rightBox, bottomBox];
     }
+}
+
+function fillDiamond(diamond, cornerColor) {
+    var topBox = findTop(diamond),
+        d = Math.abs(diamond[3]),
+        x = parseInt(topBox.id.split("_")[0]),
+        y = parseInt(topBox.id.split("_")[1]),
+        fBox,
+        fColor,
+        iColor,
+        deltaX = 1,
+        id,
+        boxToFill,
+        boxesToFill = [];
+    for (let i = 1; i <= d; i++) {
+        for (let j = -deltaX; j <= deltaX; j++) {
+            id = (x + j) + "_" + (y + i);
+            fBox = document.getElementById(id);
+            if (fBox) {
+                iColor = fBox.getAttribute("fill");
+                fColor = targetColor(cornerColor, iColor);
+                if (iColor != fColor) {
+                    boxToFill = new Object;
+                    boxToFill.box = fBox;
+                    boxToFill.tempColors = findIntermediateColors(iColor, fColor);
+                    boxesToFill.push(boxToFill);
+                }
+            }
+        }
+        deltaX++;
+    }
+    deltaX = d - 1;
+    for (i = d + 1; i < 2 * d; i++) {
+        for (var j = -deltaX; j <= deltaX; j++) {
+            id = (x + j) + "_" + (y + i);
+            fBox = document.getElementById(id);
+            if (fBox) {
+                iColor = fBox.getAttribute("fill")
+                fColor = targetColor(cornerColor, iColor)
+                if (iColor != fColor) {
+                    boxToFill = new Object;
+                    boxToFill.box = fBox;
+                    boxToFill.tempColors = findIntermediateColors(iColor, fColor);
+                    boxesToFill.push(boxToFill);
+                }
+            }
+        }
+        deltaX--;
+    }
+    changeColors(boxesToFill);
 }
 
 //Return the top box of the diamond
