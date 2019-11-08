@@ -202,12 +202,12 @@ function setColorOnClick(id) {
             } else {
                 turnNumber = 2;
                 colorRect2.setAttribute("fill", turnColor);
-            }
+            }/* 
             //Look to see if there are any more squares or diamonds
             if (!(anySquaresLeft())) {
                 //      console.log("No squares left!");
                 handleNoMoreSquares();
-            }
+            } */
         }
     }
 }
